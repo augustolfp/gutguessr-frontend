@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import defaultMap from "../../defaultMap.json";
 import {
@@ -13,19 +13,35 @@ const loader = new Loader({
 
 export default function Dashboard() {
     const { lat, lng, heading, pitch } = defaultMap[0];
+    const [map, setMap] = useState<google.maps.Map | null>(null);
+    const [userMarker, setUserMarker] =
+        useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+    const [panorama, setPanorama] =
+        useState<google.maps.StreetViewPanorama | null>(null);
     // const { map, userMarker } = await initMap(loader);
     // const panorama = await initStreetView(lat, lng, heading, pitch, loader);
 
     useEffect(() => {
         const init = async () => {
-            await initMap(loader);
-            await initStreetView(lat, lng, heading, pitch, loader);
+            const { map, userMarker } = await initMap(loader);
+            const panorama = await initStreetView(
+                lat,
+                lng,
+                heading,
+                pitch,
+                loader
+            );
+            setPanorama(panorama);
+            setMap(map);
+            setUserMarker(userMarker);
         };
         init();
     }, []);
 
     const handleSubmit = async () => {
-        // await renderResult(lat, lng, map, userMarker, loader);
+        if (map && userMarker) {
+            await renderResult(lat, lng, map, userMarker, loader);
+        }
     };
 
     return (

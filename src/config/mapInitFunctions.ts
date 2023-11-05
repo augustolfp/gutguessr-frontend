@@ -65,6 +65,7 @@ export const renderResult = async (
         const distance = await computeDistance(loader, userMarker, exactMarker);
         return { distance: distance };
     }
+    return { distance: null };
 };
 
 export const initMap = async (loader: Loader) => {

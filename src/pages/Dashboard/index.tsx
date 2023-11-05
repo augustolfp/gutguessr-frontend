@@ -18,8 +18,8 @@ export default function Dashboard() {
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
     const [panorama, setPanorama] =
         useState<google.maps.StreetViewPanorama | null>(null);
-    // const { map, userMarker } = await initMap(loader);
-    // const panorama = await initStreetView(lat, lng, heading, pitch, loader);
+
+    const [distance, setDistance] = useState<number | null>(null);
 
     useEffect(() => {
         const init = async () => {
@@ -40,7 +40,15 @@ export default function Dashboard() {
 
     const handleSubmit = async () => {
         if (map && userMarker) {
-            await renderResult(lat, lng, map, userMarker, loader);
+            const { distance } = await renderResult(
+                lat,
+                lng,
+                map,
+                userMarker,
+                loader
+            );
+
+            setDistance(distance);
         }
     };
 
@@ -51,6 +59,7 @@ export default function Dashboard() {
             <button className="btn btn-primary" onClick={handleSubmit}>
                 Submit guess
             </button>
+            <div>{distance}</div>
         </div>
     );
 }

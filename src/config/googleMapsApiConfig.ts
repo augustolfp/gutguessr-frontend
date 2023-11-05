@@ -1,6 +1,6 @@
 const genericStartingPoint = { lat: -13.3268339, lng: -41.1476912 };
 
-export const mapOptions: google.maps.MapOptions = {
+export const mapBaseConfig: google.maps.MapOptions = {
     center: genericStartingPoint,
     clickableIcons: false,
     disableDefaultUI: true,
@@ -9,7 +9,7 @@ export const mapOptions: google.maps.MapOptions = {
     gestureHandling: "greedy",
 };
 
-export const panoramaOptions: google.maps.StreetViewPanoramaOptions = {
+export const streetViewBaseConfig: google.maps.StreetViewPanoramaOptions = {
     addressControl: false,
     disableDefaultUI: true,
     motionTracking: false,

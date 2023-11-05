@@ -1,4 +1,5 @@
 import { useAppContext } from "../../contexts/AppContext";
+import InfoFooter from "../../components/InfoFooter";
 
 export default function Dashboard() {
     const { round, nextRound, submit, distance } = useAppContext();
@@ -14,24 +15,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
-            <div className="px-6 flex items-center gap-2 h-1/6">
-                <button className="btn btn-primary" onClick={submit}>
-                    Submit guess
-                </button>
-                <button className="btn btn-secondary" onClick={nextRound}>
-                    Skip/Next
-                </button>
-                {distance && (
-                    <div>
-                        <span className="font-semibold">Distance: </span>
-                        {distance}
-                    </div>
-                )}
-                <div>
-                    <span className="font-semibold">Round:</span>
-                    {round}
-                </div>
-            </div>
+            <InfoFooter />
         </div>
     );
 }

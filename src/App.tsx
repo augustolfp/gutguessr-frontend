@@ -1,7 +1,9 @@
 import "./App.css";
 
+import Dashboard from "./pages/Dashboard";
+
 function App() {
-    return <div className="text-primary font-semibold">Hello World!</div>;
+    return <Dashboard />;
 }
 
 export default App;

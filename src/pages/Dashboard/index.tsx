@@ -12,7 +12,8 @@ const loader = new Loader({
 });
 
 export default function Dashboard() {
-    const { lat, lng, heading, pitch } = defaultMap[0];
+    const [round, setRound] = useState(0);
+    const { lat, lng, heading, pitch } = defaultMap[round];
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [userMarker, setUserMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
@@ -36,7 +37,15 @@ export default function Dashboard() {
             setUserMarker(userMarker);
         };
         init();
-    }, []);
+    }, [round]);
+
+    const handleSkip = () => {
+        setMap(null);
+        setUserMarker(null);
+        setPanorama(null);
+        setDistance(null);
+        setRound((prev) => prev + 1);
+    };
 
     const handleSubmit = async () => {
         if (map && userMarker) {
@@ -59,7 +68,19 @@ export default function Dashboard() {
             <button className="btn btn-primary" onClick={handleSubmit}>
                 Submit guess
             </button>
-            <div>{distance}</div>
+            <button className="btn btn-secondary" onClick={handleSkip}>
+                Skip/Next
+            </button>
+            {distance && (
+                <div>
+                    <span className="font-semibold">Distance: </span>
+                    {distance}
+                </div>
+            )}
+            <div>
+                <span className="font-semibold">Round:</span>
+                {round}
+            </div>
         </div>
     );
 }

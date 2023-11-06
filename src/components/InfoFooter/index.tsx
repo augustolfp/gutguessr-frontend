@@ -14,9 +14,6 @@ export default function InfoFooter() {
                     {distance}
                 </div>
             )}
-            <button className="btn btn-primary" onClick={submit}>
-                Submit
-            </button>
         </div>
     );
 }

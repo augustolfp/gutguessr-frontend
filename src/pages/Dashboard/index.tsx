@@ -1,18 +1,16 @@
 import { useAppContext } from "../../contexts/AppContext";
 import InfoFooter from "../../components/InfoFooter";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 
 export default function Dashboard() {
-    const isDesktop = useMediaQuery("(min-width: 600px)");
     const { submit } = useAppContext();
     const [isTrayOpen, setIsTrayOpen] = useState(false);
 
     let trayStyle: string = isTrayOpen
-        ? "absolute bottom-0 right-0 z-10 w-full h-2/3 transition-all"
-        : "absolute bottom-0 right-0 z-10 w-10 h-10 transition-all";
+        ? "absolute bottom-0 right-0 z-10 w-full h-2/3 md:bottom-4 md:right-4 md:w-1/2 md:h-1/2 transition-all"
+        : "absolute bottom-0 right-0 z-10 w-14 h-14 md:bottom-4 md:right-4 transition-all";
 
     let mapContainerStyle: string = isTrayOpen
         ? "h-full w-full opacity-100"
@@ -34,7 +32,7 @@ export default function Dashboard() {
                             </button>
                         )}
                         <button
-                            className="btn btn-neutral btn-sm aspect-square rounded-full p-2 absolute top-1 right-1 z-20"
+                            className="btn btn-neutral btn-sm md:btn-md aspect-square rounded-full p-2 absolute top-1 right-1 z-20"
                             onClick={() => setIsTrayOpen((prev) => !prev)}
                         >
                             {isTrayOpen ? <AiOutlineClose /> : <FaMapMarked />}

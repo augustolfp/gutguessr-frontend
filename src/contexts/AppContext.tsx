@@ -76,7 +76,7 @@ export function AppProvider({ children }: ProviderProps) {
                 loader
             );
 
-            setDistance(distance);
+            setDistance(Math.trunc((distance ?? 0) / 1000));
         }
     };
 

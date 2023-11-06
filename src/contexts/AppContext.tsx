@@ -1,3 +1,4 @@
+import calculateScore from "../utils/calculateScore";
 import { Loader } from "@googlemaps/js-api-loader";
 import { createContext, useState, useEffect, useContext } from "react";
 import defaultMap from "../defaultMap.json";
@@ -11,6 +12,12 @@ const loader = new Loader({
     apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
 });
 
+type ScoreObj = {
+    round: number;
+    score: number;
+    distance: number | null;
+};
+
 interface ProviderProps {
     children?: React.ReactNode;
 }
@@ -19,10 +26,10 @@ interface MapContext {
     round: number;
     nextRound: () => void;
     submit: () => Promise<void>;
-    distance: number | null;
     map: google.maps.Map | null;
     userMarker: google.maps.marker.AdvancedMarkerElement | null;
     panorama: google.maps.StreetViewPanorama | null;
+    scores: ScoreObj[];
 }
 
 const AppContext = createContext({} as MapContext);
@@ -32,6 +39,7 @@ export function useAppContext() {
 }
 
 export function AppProvider({ children }: ProviderProps) {
+    const [scores, setScores] = useState<ScoreObj[]>([]);
     const [round, setRound] = useState(0);
     const { lat, lng, heading, pitch } = defaultMap[round];
     const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -39,7 +47,6 @@ export function AppProvider({ children }: ProviderProps) {
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
     const [panorama, setPanorama] =
         useState<google.maps.StreetViewPanorama | null>(null);
-    const [distance, setDistance] = useState<number | null>(null);
 
     useEffect(() => {
         const init = async () => {
@@ -62,7 +69,6 @@ export function AppProvider({ children }: ProviderProps) {
         setMap(null);
         setUserMarker(null);
         setPanorama(null);
-        setDistance(null);
         setRound((prev) => prev + 1);
     };
 
@@ -76,7 +82,12 @@ export function AppProvider({ children }: ProviderProps) {
                 loader
             );
 
-            setDistance(Math.trunc((distance ?? 0) / 1000));
+            let score: ScoreObj = { distance: null, score: 0, round: round };
+            if (distance) {
+                score.distance = Math.trunc(distance / 1000);
+                score.score = calculateScore(Math.trunc(distance / 1000));
+            }
+            setScores((prev) => [...prev, score]);
         }
     };
 
@@ -85,11 +96,11 @@ export function AppProvider({ children }: ProviderProps) {
             value={{
                 round,
                 nextRound,
-                distance,
                 map,
                 userMarker,
                 panorama,
                 submit,
+                scores,
             }}
         >
             {children}

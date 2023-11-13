@@ -1,7 +1,7 @@
 import calculateScore from "../utils/calculateScore";
+import { axiosClient } from "../config/axios";
 import { Loader } from "@googlemaps/js-api-loader";
 import { createContext, useState, useEffect, useContext } from "react";
-import defaultMap from "../defaultMap.json";
 import {
     initMap,
     initStreetView,
@@ -22,6 +22,16 @@ interface ProviderProps {
     children?: React.ReactNode;
 }
 
+type Seed = {
+    panoId: string;
+    lat: number;
+    lng: number;
+    heading: number;
+    pitch: number;
+    imageDate: string;
+    links: string[];
+};
+
 interface MapContext {
     round: number;
     nextRound: () => void;
@@ -30,6 +40,9 @@ interface MapContext {
     userMarker: google.maps.marker.AdvancedMarkerElement | null;
     panorama: google.maps.StreetViewPanorama | null;
     scores: ScoreObj[];
+    init: () => void;
+    seeds: Seed[];
+    getSeeds: () => void;
 }
 
 const AppContext = createContext({} as MapContext);
@@ -40,30 +53,33 @@ export function useAppContext() {
 
 export function AppProvider({ children }: ProviderProps) {
     const [scores, setScores] = useState<ScoreObj[]>([]);
+    const [seeds, setSeeds] = useState<Seed[]>([]);
     const [round, setRound] = useState(0);
-    const { lat, lng, heading, pitch } = defaultMap[round];
+    // const { lat, lng, heading, pitch } = seeds[round];
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [userMarker, setUserMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
     const [panorama, setPanorama] =
         useState<google.maps.StreetViewPanorama | null>(null);
 
-    useEffect(() => {
-        const init = async () => {
-            const { map, userMarker } = await initMap(loader);
-            const panorama = await initStreetView(
-                lat,
-                lng,
-                heading,
-                pitch,
-                loader
-            );
-            setPanorama(panorama);
-            setMap(map);
-            setUserMarker(userMarker);
-        };
-        init();
-    }, [round]);
+    const getSeeds = async () => {
+        const result = await axiosClient.get(`/singlePlayer/6`);
+        setSeeds(result.data);
+    };
+
+    const init = async () => {
+        const { map, userMarker } = await initMap(loader);
+        const panorama = await initStreetView(
+            seeds[round].lat,
+            seeds[round].lng,
+            seeds[round].heading,
+            seeds[round].pitch,
+            loader
+        );
+        setPanorama(panorama);
+        setMap(map);
+        setUserMarker(userMarker);
+    };
 
     const nextRound = () => {
         setMap(null);
@@ -75,8 +91,8 @@ export function AppProvider({ children }: ProviderProps) {
     const submit = async () => {
         if (map && userMarker) {
             const { distance } = await renderResult(
-                lat,
-                lng,
+                seeds[round].lat,
+                seeds[round].lng,
                 map,
                 userMarker,
                 loader
@@ -101,6 +117,9 @@ export function AppProvider({ children }: ProviderProps) {
                 panorama,
                 submit,
                 scores,
+                init,
+                getSeeds,
+                seeds,
             }}
         >
             {children}

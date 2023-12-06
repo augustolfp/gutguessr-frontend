@@ -55,8 +55,6 @@ export function AppProvider({ children }: ProviderProps) {
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [userMarker, setUserMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
-    const [panorama, setPanorama] =
-        useState<google.maps.StreetViewPanorama | null>(null);
 
     const getSeeds = async () => {
         const result = await axiosClient.get(`/singlePlayer/6`);
@@ -72,7 +70,7 @@ export function AppProvider({ children }: ProviderProps) {
             seeds[round].pitch,
             loader
         );
-        setPanorama(panorama);
+
         setMap(map);
         setUserMarker(userMarker);
     };
@@ -80,7 +78,7 @@ export function AppProvider({ children }: ProviderProps) {
     const nextRound = () => {
         setMap(null);
         setUserMarker(null);
-        setPanorama(null);
+
         setRound((prev) => prev + 1);
     };
 

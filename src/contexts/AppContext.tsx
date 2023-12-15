@@ -1,4 +1,3 @@
-import calculateScore from "../utils/calculateScore";
 import { axiosClient } from "../config/axios";
 import { Loader } from "@googlemaps/js-api-loader";
 import { createContext, useState, useContext } from "react";

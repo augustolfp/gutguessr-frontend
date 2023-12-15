@@ -19,8 +19,9 @@ interface ProviderProps {
 interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
-    init: () => Promise<void>;
     startGame: () => Promise<{ success: boolean }>;
+    displayResult: () => Promise<number | undefined>;
+    rounds: Round[];
 }
 
 const AppContext = createContext({} as MapContext);
@@ -31,8 +32,7 @@ export function useAppContext() {
 
 export function AppProvider({ children }: ProviderProps) {
     const [session, setSession] = useState<Session | null>(null);
-    // const [rounds, setRounds] = useState<Round[]>([]);
-    const rounds: Round[] = [];
+    const [rounds, setRounds] = useState<Round[]>([]);
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [userMarker, setUserMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
@@ -42,13 +42,13 @@ export function AppProvider({ children }: ProviderProps) {
         return session;
     };
 
-    const init = async () => {
+    const init = async (round: Round) => {
         const { map, userMarker } = await initMap(loader);
         const panorama = await initStreetView(
-            rounds[rounds.length - 1].lat,
-            rounds[rounds.length - 1].lng,
-            rounds[rounds.length - 1].heading,
-            rounds[rounds.length - 1].pitch,
+            round.lat,
+            round.lng,
+            round.heading,
+            round.pitch,
             loader
         );
 
@@ -66,17 +66,19 @@ export function AppProvider({ children }: ProviderProps) {
                     }
                 );
 
-                rounds.push({
-                    _id: result.data.rounds[0]._id,
-                    lat: result.data.rounds[0].lat,
-                    lng: result.data.rounds[0].lng,
-                    heading: result.data.rounds[0].heading,
-                    pitch: result.data.rounds[0].pitch,
-                    score: result.data.rounds[0].score,
-                    timestamp: result.data.rounds[0].timestamp,
-                });
+                setRounds([
+                    {
+                        _id: result.data.rounds[0]._id,
+                        lat: result.data.rounds[0].lat,
+                        lng: result.data.rounds[0].lng,
+                        heading: result.data.rounds[0].heading,
+                        pitch: result.data.rounds[0].pitch,
+                        score: result.data.rounds[0].score,
+                        timestamp: result.data.rounds[0].timestamp,
+                    },
+                ]);
 
-                init();
+                init(result.data.rounds[0]);
                 return {
                     success: true,
                 };
@@ -91,13 +93,27 @@ export function AppProvider({ children }: ProviderProps) {
         };
     };
 
+    const displayResult = async () => {
+        if (map && userMarker) {
+            const { distance: dist } = await renderResult(
+                rounds[rounds.length - 1].lat,
+                rounds[rounds.length - 1].lng,
+                map,
+                userMarker,
+                loader
+            );
+            return Math.trunc((dist ?? 0) / 1000);
+        }
+    };
+
     return (
         <AppContext.Provider
             value={{
-                init,
                 session,
                 updateSession,
                 startGame,
+                displayResult,
+                rounds,
             }}
         >
             {children}

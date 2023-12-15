@@ -4,7 +4,7 @@ import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 
 export default function CollapsibleTray() {
-    const { submit } = useAppContext();
+    // const { submit } = useAppContext();
     const [isTrayOpen, setIsTrayOpen] = useState(false);
 
     let trayStyle: string = isTrayOpen
@@ -19,11 +19,11 @@ export default function CollapsibleTray() {
         <div className={`${trayStyle}`}>
             <div className="flex flex-col gap-1 h-full w-full">
                 <div id="map" className={`${mapContainerStyle}`}></div>
-                {isTrayOpen && (
+                {/* {isTrayOpen && (
                     <button className="btn btn-primary w-full" onClick={submit}>
                         Submit guess!
                     </button>
-                )}
+                )} */}
                 <button
                     className="btn btn-neutral btn-sm md:btn-md aspect-square rounded-full p-2 absolute top-1 right-1 z-20"
                     onClick={() => setIsTrayOpen((prev) => !prev)}

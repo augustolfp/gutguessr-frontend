@@ -5,16 +5,10 @@ import InfoFooter from "../../components/InfoFooter";
 import CollapsibleTray from "../../components/CollapsibleTray";
 
 export default function Dashboard() {
-    const { init, getSeeds, seeds, round } = useAppContext();
+    const { startGame } = useAppContext();
     useEffect(() => {
-        getSeeds();
+        startGame();
     }, []);
-
-    useEffect(() => {
-        if (seeds.length !== 0) {
-            init();
-        }
-    }, [seeds, round]);
 
     return (
         <div className="w-screen h-screen">

@@ -7,42 +7,21 @@ import {
     initStreetView,
     renderResult,
 } from "../config/mapInitFunctions";
-import { type Session } from "../types";
+import { type Session, type Round } from "../types";
 
 const loader = new Loader({
     apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
 });
 
-type ScoreObj = {
-    round: number;
-    score: number;
-    distance: number | null;
-};
-
 interface ProviderProps {
     children?: React.ReactNode;
 }
 
-type Seed = {
-    panoId: string;
-    lat: number;
-    lng: number;
-    heading: number;
-    pitch: number;
-    imageDate: string;
-    links: string[];
-};
-
 interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
-    round: number;
-    nextRound: () => void;
-    submit: () => Promise<void>;
-    scores: ScoreObj[];
-    init: () => void;
-    seeds: Seed[];
-    getSeeds: () => void;
+    init: () => Promise<void>;
+    startGame: () => Promise<{ success: boolean }>;
 }
 
 const AppContext = createContext({} as MapContext);
@@ -53,17 +32,11 @@ export function useAppContext() {
 
 export function AppProvider({ children }: ProviderProps) {
     const [session, setSession] = useState<Session | null>(null);
-    const [scores, setScores] = useState<ScoreObj[]>([]);
-    const [seeds, setSeeds] = useState<Seed[]>([]);
-    const [round, setRound] = useState(0);
+    // const [rounds, setRounds] = useState<Round[]>([]);
+    const rounds: Round[] = [];
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [userMarker, setUserMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
-
-    const getSeeds = async () => {
-        const result = await axiosClient.get(`/singlePlayer/6`);
-        setSeeds(result.data);
-    };
 
     const updateSession = (session: Session) => {
         setSession(session);
@@ -73,10 +46,10 @@ export function AppProvider({ children }: ProviderProps) {
     const init = async () => {
         const { map, userMarker } = await initMap(loader);
         const panorama = await initStreetView(
-            seeds[round].lat,
-            seeds[round].lng,
-            seeds[round].heading,
-            seeds[round].pitch,
+            rounds[rounds.length - 1].lat,
+            rounds[rounds.length - 1].lng,
+            rounds[rounds.length - 1].heading,
+            rounds[rounds.length - 1].pitch,
             loader
         );
 
@@ -84,44 +57,50 @@ export function AppProvider({ children }: ProviderProps) {
         setUserMarker(userMarker);
     };
 
-    const nextRound = () => {
-        setMap(null);
-        setUserMarker(null);
-
-        setRound((prev) => prev + 1);
-    };
-
-    const submit = async () => {
-        if (map && userMarker) {
-            const { distance } = await renderResult(
-                seeds[round].lat,
-                seeds[round].lng,
-                map,
-                userMarker,
-                loader
-            );
-
-            let score: ScoreObj = { distance: null, score: 0, round: round };
-            if (distance) {
-                score.distance = Math.trunc(distance / 1000);
-                score.score = calculateScore(Math.trunc(distance / 1000));
+    const startGame = async () => {
+        console.log("rodei1");
+        if (session && rounds.length === 0) {
+            console.log("rodei 2");
+            try {
+                const result = await axiosClient.post(
+                    "/single-player-session/start",
+                    {
+                        sessionId: session._id,
+                    }
+                );
+                console.log(result.data.rounds[0]);
+                rounds.push({
+                    _id: result.data.rounds[0]._id,
+                    lat: result.data.rounds[0].lat,
+                    lng: result.data.rounds[0].lng,
+                    heading: result.data.rounds[0].heading,
+                    pitch: result.data.rounds[0].pitch,
+                    score: result.data.rounds[0].score,
+                    timestamp: result.data.rounds[0].timestamp,
+                });
+                console.log(rounds);
+                init();
+                return {
+                    success: true,
+                };
+            } catch (err) {
+                return {
+                    success: false,
+                };
             }
-            setScores((prev) => [...prev, score]);
         }
+        return {
+            success: false,
+        };
     };
 
     return (
         <AppContext.Provider
             value={{
-                round,
-                nextRound,
-                submit,
-                scores,
                 init,
-                getSeeds,
-                seeds,
                 session,
                 updateSession,
+                startGame,
             }}
         >
             {children}

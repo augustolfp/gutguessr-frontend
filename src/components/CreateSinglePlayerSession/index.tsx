@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { axiosClient } from "../../config/axios";
 import { useAppContext } from "../../contexts/AppContext";
+import { Link } from "react-router-dom";
 
 export default function CreateSinglePlayerSession() {
     const [username, setUsername] = useState<string>("");
@@ -100,9 +101,9 @@ export default function CreateSinglePlayerSession() {
                         <h3 className="text-success">
                             Your game is ready, {session.username}!
                         </h3>
-                        <button className="btn btn-primary">
+                        <Link to="/single-player" className="btn btn-primary">
                             Go to first round!
-                        </button>
+                        </Link>
                     </div>
                 )}
             </form>

@@ -1,16 +1,16 @@
 import { useAppContext } from "../../contexts/AppContext";
 
 export default function InfoFooter() {
-    const { nextRound, scores } = useAppContext();
+    // const { nextRound, scores } = useAppContext();
 
     return (
         <div className="px-6 flex items-center gap-2 h-1/6">
-            <button className="btn btn-secondary" onClick={nextRound}>
+            {/* <button className="btn btn-secondary" onClick={nextRound}>
                 Next round!
-            </button>
+            </button> */}
             <div>
                 <h2>Scores:</h2>
-                <ul>
+                {/* <ul>
                     {scores.map((score, index) => (
                         <li key={index} className="flex gap-1">
                             <span className="font-black">
@@ -26,7 +26,7 @@ export default function InfoFooter() {
                             </span>
                         </li>
                     ))}
-                </ul>
+                </ul> */}
             </div>
         </div>
     );

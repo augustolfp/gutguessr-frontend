@@ -7,6 +7,7 @@ import {
     initStreetView,
     renderResult,
 } from "../config/mapInitFunctions";
+import { type Session } from "../types";
 
 const loader = new Loader({
     apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
@@ -16,12 +17,6 @@ type ScoreObj = {
     round: number;
     score: number;
     distance: number | null;
-};
-
-type Session = {
-    _id: string;
-    username: string;
-    numOfRounds: number;
 };
 
 interface ProviderProps {

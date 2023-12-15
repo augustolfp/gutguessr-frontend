@@ -57,9 +57,7 @@ export function AppProvider({ children }: ProviderProps) {
     };
 
     const startGame = async () => {
-        console.log("rodei1");
         if (session && rounds.length === 0) {
-            console.log("rodei 2");
             try {
                 const result = await axiosClient.post(
                     "/single-player-session/start",
@@ -67,7 +65,7 @@ export function AppProvider({ children }: ProviderProps) {
                         sessionId: session._id,
                     }
                 );
-                console.log(result.data.rounds[0]);
+
                 rounds.push({
                     _id: result.data.rounds[0]._id,
                     lat: result.data.rounds[0].lat,
@@ -77,7 +75,7 @@ export function AppProvider({ children }: ProviderProps) {
                     score: result.data.rounds[0].score,
                     timestamp: result.data.rounds[0].timestamp,
                 });
-                console.log(rounds);
+
                 init();
                 return {
                     success: true,

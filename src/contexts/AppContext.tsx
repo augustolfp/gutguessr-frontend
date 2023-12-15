@@ -18,6 +18,12 @@ type ScoreObj = {
     distance: number | null;
 };
 
+type Session = {
+    _id: string;
+    username: string;
+    numOfRounds: number;
+};
+
 interface ProviderProps {
     children?: React.ReactNode;
 }
@@ -33,6 +39,8 @@ type Seed = {
 };
 
 interface MapContext {
+    session: Session | null;
+    updateSession: (session: Session) => Session | null;
     round: number;
     nextRound: () => void;
     submit: () => Promise<void>;
@@ -49,6 +57,7 @@ export function useAppContext() {
 }
 
 export function AppProvider({ children }: ProviderProps) {
+    const [session, setSession] = useState<Session | null>(null);
     const [scores, setScores] = useState<ScoreObj[]>([]);
     const [seeds, setSeeds] = useState<Seed[]>([]);
     const [round, setRound] = useState(0);
@@ -59,6 +68,11 @@ export function AppProvider({ children }: ProviderProps) {
     const getSeeds = async () => {
         const result = await axiosClient.get(`/singlePlayer/6`);
         setSeeds(result.data);
+    };
+
+    const updateSession = (session: Session) => {
+        setSession(session);
+        return session;
     };
 
     const init = async () => {
@@ -111,6 +125,8 @@ export function AppProvider({ children }: ProviderProps) {
                 init,
                 getSeeds,
                 seeds,
+                session,
+                updateSession,
             }}
         >
             {children}

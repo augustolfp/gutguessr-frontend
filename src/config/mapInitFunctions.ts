@@ -9,7 +9,7 @@ export const initMarker = async (markerLoader: google.maps.MarkerLibrary) => {
     return marker;
 };
 
-const traceDistanceLine = (
+export const traceDistanceLine = (
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement,
     map: google.maps.Map

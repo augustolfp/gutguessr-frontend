@@ -5,16 +5,20 @@ import { AiOutlineClose } from "react-icons/ai";
 import { axiosClient } from "../../config/axios";
 
 export default function CollapsibleTray() {
-    const { displayResult, rounds } = useAppContext();
+    const { displayResult, getDistance, rounds } = useAppContext();
     const [isTrayOpen, setIsTrayOpen] = useState(false);
     const [distance, setDistance] = useState<number | null>(null);
     const [score, setScore] = useState<number | null>(null);
 
     const onSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-
+        const dist = await getDistance();
         const submitDistance = async (dist: number) => {
             try {
+                console.log({
+                    roundId: rounds[rounds.length - 1]._id,
+                    distance: dist,
+                });
                 const result = await axiosClient.post(
                     "/single-player-session/score",
                     {
@@ -23,15 +27,14 @@ export default function CollapsibleTray() {
                     }
                 );
                 setScore(result.data.score);
+                setDistance(dist);
+                displayResult();
             } catch (err) {
                 console.log(err);
             } finally {
             }
         };
-
-        const dist = await displayResult();
         if (dist) {
-            setDistance(dist);
             await submitDistance(dist);
         }
     };
@@ -63,7 +66,10 @@ export default function CollapsibleTray() {
                     {isTrayOpen ? <AiOutlineClose /> : <FaMapMarked />}
                 </button>
             </div>
-            <div>score: {score}</div>
+            <div>
+                <div>score: {score}</div>
+                <div>Distance: {distance}</div>
+            </div>
         </div>
     );
 }

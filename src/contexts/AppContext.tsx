@@ -6,6 +6,7 @@ import {
     initStreetView,
     initMarker,
     computeDistance,
+    traceDistanceLine,
 } from "../config/mapInitFunctions";
 import { type Session, type Round } from "../types";
 
@@ -17,7 +18,8 @@ interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
     startGame: () => Promise<{ success: boolean }>;
-    displayResult: () => Promise<number | null>;
+    displayResult: () => void;
+    getDistance: () => Promise<number | null>;
     rounds: Round[];
 }
 
@@ -90,7 +92,7 @@ export function AppProvider({ children }: ProviderProps) {
                 streetViewLoader
             );
 
-            setMap(map);
+            setMap(initUserMap);
             setUserMarker(initUserMarker);
             setExactMarker(initExactMarker);
         }
@@ -133,13 +135,24 @@ export function AppProvider({ children }: ProviderProps) {
         };
     };
 
-    const displayResult = async () => {
+    const displayResult = () => {
         if (map && userMarker && exactMarker && geometryLoader) {
-            return await computeDistance(
+            traceDistanceLine(userMarker, exactMarker, map);
+        }
+    };
+
+    const getDistance = async () => {
+        if (userMarker && exactMarker && geometryLoader) {
+            const dist = await computeDistance(
                 geometryLoader,
                 userMarker,
                 exactMarker
             );
+
+            if (dist) {
+                return Math.floor(dist / 1000);
+            }
+            return null;
         }
         return null;
     };
@@ -152,6 +165,7 @@ export function AppProvider({ children }: ProviderProps) {
                 startGame,
                 displayResult,
                 rounds,
+                getDistance,
             }}
         >
             {children}

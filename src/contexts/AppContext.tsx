@@ -1,16 +1,13 @@
 import { axiosClient } from "../config/axios";
 import { Loader } from "@googlemaps/js-api-loader";
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import {
     initMap,
     initStreetView,
-    renderResult,
+    initMarker,
+    computeDistance,
 } from "../config/mapInitFunctions";
 import { type Session, type Round } from "../types";
-
-const loader = new Loader({
-    apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
-});
 
 interface ProviderProps {
     children?: React.ReactNode;
@@ -20,7 +17,7 @@ interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
     startGame: () => Promise<{ success: boolean }>;
-    displayResult: () => Promise<number | undefined>;
+    displayResult: () => Promise<number | null>;
     rounds: Round[];
 }
 
@@ -31,29 +28,72 @@ export function useAppContext() {
 }
 
 export function AppProvider({ children }: ProviderProps) {
+    const [loader, setLoader] = useState<Loader | null>(null);
+    const [markerLoader, setMarkerLoader] =
+        useState<google.maps.MarkerLibrary | null>(null);
+    const [mapLoader, setMapLoader] = useState<google.maps.MapsLibrary | null>(
+        null
+    );
+    const [streetViewLoader, setStreetViewLoader] =
+        useState<google.maps.StreetViewLibrary | null>(null);
+    const [geometryLoader, setGeometryLoader] =
+        useState<google.maps.GeometryLibrary | null>(null);
+
     const [session, setSession] = useState<Session | null>(null);
     const [rounds, setRounds] = useState<Round[]>([]);
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [userMarker, setUserMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
-
+    const [exactMarker, setExactMarker] =
+        useState<google.maps.marker.AdvancedMarkerElement | null>(null);
     const updateSession = (session: Session) => {
         setSession(session);
         return session;
     };
 
-    const init = async (round: Round) => {
-        const { map, userMarker } = await initMap(loader);
-        const panorama = await initStreetView(
-            round.lat,
-            round.lng,
-            round.heading,
-            round.pitch,
-            loader
-        );
+    useEffect(() => {
+        const initLoader = new Loader({
+            apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
+        });
 
-        setMap(map);
-        setUserMarker(userMarker);
+        initLoader.importLibrary("marker").then((initMarkerLoader) => {
+            setMarkerLoader(initMarkerLoader);
+        });
+
+        initLoader.importLibrary("maps").then((initMapLoader) => {
+            setMapLoader(initMapLoader);
+        });
+
+        initLoader.importLibrary("streetView").then((initStreetViewLoader) => {
+            setStreetViewLoader(initStreetViewLoader);
+        });
+
+        initLoader.importLibrary("geometry").then((initGeometryLoader) => {
+            setGeometryLoader(initGeometryLoader);
+        });
+
+        setLoader(initLoader);
+    }, []);
+
+    const init = async (round: Round) => {
+        if (loader && markerLoader && mapLoader && streetViewLoader) {
+            const initUserMarker = await initMarker(markerLoader);
+            const initExactMarker = await initMarker(markerLoader);
+            initExactMarker.position = { lat: round.lat, lng: round.lng };
+
+            const initUserMap = await initMap(mapLoader, initUserMarker);
+            const panorama = await initStreetView(
+                round.lat,
+                round.lng,
+                round.heading,
+                round.pitch,
+                streetViewLoader
+            );
+
+            setMap(map);
+            setUserMarker(initUserMarker);
+            setExactMarker(initExactMarker);
+        }
     };
 
     const startGame = async () => {
@@ -94,16 +134,14 @@ export function AppProvider({ children }: ProviderProps) {
     };
 
     const displayResult = async () => {
-        if (map && userMarker) {
-            const { distance: dist } = await renderResult(
-                rounds[rounds.length - 1].lat,
-                rounds[rounds.length - 1].lng,
-                map,
+        if (map && userMarker && exactMarker && geometryLoader) {
+            return await computeDistance(
+                geometryLoader,
                 userMarker,
-                loader
+                exactMarker
             );
-            return Math.trunc((dist ?? 0) / 1000);
         }
+        return null;
     };
 
     return (

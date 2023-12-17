@@ -27,5 +27,6 @@ export type Score = {
         date: string;
         scores: number[];
         averageScore: number;
+        sessionId: string;
     }[];
 };

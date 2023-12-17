@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { axiosClient } from "../../config/axios";
+import { createSession } from "../../config/axios";
 import { useAppContext } from "../../contexts/AppContext";
 import { Link } from "react-router-dom";
 
@@ -12,26 +12,22 @@ export default function CreateSinglePlayerSession() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsLoading(true);
-        setIsError(false);
+        if (numOfRounds) {
+            setIsLoading(true);
+            setIsError(false);
 
-        try {
-            const result = await axiosClient.post(
-                "/single-player-session/new",
-                {
-                    username,
-                    numOfRounds,
-                }
-            );
+            try {
+                const result = await createSession(username, numOfRounds);
 
-            updateSession({
-                ...result.data,
-            });
-            return;
-        } catch (err) {
-            setIsError(true);
-        } finally {
-            setIsLoading(false);
+                updateSession({
+                    ...result.data,
+                });
+                return;
+            } catch (err) {
+                setIsError(true);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 

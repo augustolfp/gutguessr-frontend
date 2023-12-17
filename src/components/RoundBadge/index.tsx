@@ -1,6 +1,6 @@
 import { useAppContext } from "../../contexts/AppContext";
 
-export default function ScoreBadge() {
+export default function RoundBadge() {
     const { session, rounds } = useAppContext();
     const numerator = rounds.length;
     const denominator = session?.numOfRounds;
@@ -14,9 +14,6 @@ export default function ScoreBadge() {
                         {numerator} of {denominator}
                     </span>
                 )}
-            </div>
-            <div className="flex flex-col text-base-content items-center">
-                <span>Total Score</span>
             </div>
         </div>
     );

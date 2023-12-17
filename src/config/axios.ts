@@ -32,3 +32,7 @@ export const requestNextRound = async (sessionId: string) => {
         sessionId,
     });
 };
+
+export const getSessionScore = async (sessionId: string) => {
+    return await axiosClient.get(`/single-player-session/score/${sessionId}`);
+};

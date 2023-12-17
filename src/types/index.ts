@@ -14,3 +14,11 @@ export type Round = {
     timestamp: number;
     sessionId: string;
 };
+
+export type Score = {
+    _id: string;
+    username: string;
+    date: string;
+    scores: number[];
+    averageScore: number;
+};

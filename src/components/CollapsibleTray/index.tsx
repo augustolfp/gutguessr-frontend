@@ -4,8 +4,7 @@ import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 
 export default function CollapsibleTray() {
-    const { displayResult, submitDistance, distance, score, rounds } =
-        useAppContext();
+    const { displayResult, submitDistance, rounds } = useAppContext();
     const [isTrayOpen, setIsTrayOpen] = useState(false);
 
     const onSubmit = (e: React.SyntheticEvent) => {
@@ -41,10 +40,6 @@ export default function CollapsibleTray() {
                 >
                     {isTrayOpen ? <AiOutlineClose /> : <FaMapMarked />}
                 </button>
-            </div>
-            <div>
-                <div>score: {score}</div>
-                <div>Distance: {distance}</div>
             </div>
         </div>
     );

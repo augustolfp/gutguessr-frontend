@@ -1,4 +1,4 @@
-import { getFirstRound } from "../config/axios";
+import { getFirstRound, submitRoundScore } from "../config/axios";
 import { Loader } from "@googlemaps/js-api-loader";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
@@ -17,10 +17,12 @@ interface ProviderProps {
 interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
-    startGame: () => Promise<{ success: boolean }>;
+    startGame: () => Promise<void>;
     displayResult: () => void;
-    getDistance: () => Promise<number | null>;
+    submitDistance: () => Promise<void>;
     rounds: Round[];
+    distance: number | null;
+    score: number | null;
 }
 
 const AppContext = createContext({} as MapContext);
@@ -48,6 +50,8 @@ export function AppProvider({ children }: ProviderProps) {
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
     const [exactMarker, setExactMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+    const [distance, setDistance] = useState<number | null>(null);
+    const [score, setScore] = useState<number | null>(null);
     const updateSession = (session: Session) => {
         setSession(session);
         return session;
@@ -77,7 +81,7 @@ export function AppProvider({ children }: ProviderProps) {
         setLoader(initLoader);
     }, []);
 
-    const init = async (round: Round) => {
+    const renderRound = async (round: Round) => {
         if (loader && markerLoader && mapLoader && streetViewLoader) {
             const initUserMarker = await initMarker(markerLoader);
             const initExactMarker = await initMarker(markerLoader);
@@ -100,34 +104,25 @@ export function AppProvider({ children }: ProviderProps) {
 
     const startGame = async () => {
         if (session && rounds.length === 0) {
-            try {
-                const result = await getFirstRound(session._id);
+            const { data } = await getFirstRound(session._id);
 
-                setRounds([
-                    {
-                        _id: result.data.rounds[0]._id,
-                        lat: result.data.rounds[0].lat,
-                        lng: result.data.rounds[0].lng,
-                        heading: result.data.rounds[0].heading,
-                        pitch: result.data.rounds[0].pitch,
-                        score: result.data.rounds[0].score,
-                        timestamp: result.data.rounds[0].timestamp,
-                    },
-                ]);
+            const { _id, lat, lng, heading, pitch, score, timestamp } =
+                data.rounds[0];
 
-                init(result.data.rounds[0]);
-                return {
-                    success: true,
-                };
-            } catch (err) {
-                return {
-                    success: false,
-                };
-            }
+            setRounds([
+                {
+                    _id,
+                    lat,
+                    lng,
+                    heading,
+                    pitch,
+                    score,
+                    timestamp,
+                },
+            ]);
+
+            renderRound(data.rounds[0]);
         }
-        return {
-            success: false,
-        };
     };
 
     const displayResult = () => {
@@ -136,7 +131,7 @@ export function AppProvider({ children }: ProviderProps) {
         }
     };
 
-    const getDistance = async () => {
+    const calculateDistance = async () => {
         if (userMarker && exactMarker && geometryLoader) {
             const dist = await computeDistance(
                 geometryLoader,
@@ -145,11 +140,20 @@ export function AppProvider({ children }: ProviderProps) {
             );
 
             if (dist) {
+                setDistance(Math.floor(dist / 1000));
                 return Math.floor(dist / 1000);
             }
             return null;
         }
         return null;
+    };
+
+    const submitDistance = async () => {
+        const getDistance = await calculateDistance();
+        if (getDistance) {
+            const result = await submitRoundScore(rounds[0]._id, getDistance);
+            setScore(result.data.score);
+        }
     };
 
     return (
@@ -160,7 +164,9 @@ export function AppProvider({ children }: ProviderProps) {
                 startGame,
                 displayResult,
                 rounds,
-                getDistance,
+                submitDistance,
+                distance,
+                score,
             }}
         >
             {children}

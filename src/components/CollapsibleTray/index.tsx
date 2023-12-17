@@ -2,39 +2,17 @@ import { useAppContext } from "../../contexts/AppContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { submitRoundScore } from "../../config/axios";
 
 export default function CollapsibleTray() {
-    const { displayResult, getDistance, rounds } = useAppContext();
+    const { displayResult, submitDistance, distance, score, rounds } =
+        useAppContext();
     const [isTrayOpen, setIsTrayOpen] = useState(false);
-    const [distance, setDistance] = useState<number | null>(null);
-    const [score, setScore] = useState<number | null>(null);
 
-    const onSubmit = async (e: React.SyntheticEvent) => {
+    const onSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        const dist = await getDistance();
-        const submitDistance = async (dist: number) => {
-            try {
-                console.log({
-                    roundId: rounds[rounds.length - 1]._id,
-                    distance: dist,
-                });
-                const result = await submitRoundScore(
-                    rounds[rounds.length - 1]._id,
-                    dist
-                );
-
-                setScore(result.data.score);
-                setDistance(dist);
-                displayResult();
-            } catch (err) {
-                console.log(err);
-            } finally {
-            }
-        };
-        if (dist) {
-            await submitDistance(dist);
-        }
+        submitDistance().then(() => {
+            displayResult();
+        });
     };
 
     let trayStyle: string = isTrayOpen

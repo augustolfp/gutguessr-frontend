@@ -1,4 +1,4 @@
-import { axiosClient } from "../config/axios";
+import { getFirstRound } from "../config/axios";
 import { Loader } from "@googlemaps/js-api-loader";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
@@ -101,12 +101,7 @@ export function AppProvider({ children }: ProviderProps) {
     const startGame = async () => {
         if (session && rounds.length === 0) {
             try {
-                const result = await axiosClient.post(
-                    "/single-player-session/start",
-                    {
-                        sessionId: session._id,
-                    }
-                );
+                const result = await getFirstRound(session._id);
 
                 setRounds([
                     {

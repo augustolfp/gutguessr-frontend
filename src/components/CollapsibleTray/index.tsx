@@ -2,7 +2,7 @@ import { useAppContext } from "../../contexts/AppContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { axiosClient } from "../../config/axios";
+import { submitRoundScore } from "../../config/axios";
 
 export default function CollapsibleTray() {
     const { displayResult, getDistance, rounds } = useAppContext();
@@ -19,13 +19,11 @@ export default function CollapsibleTray() {
                     roundId: rounds[rounds.length - 1]._id,
                     distance: dist,
                 });
-                const result = await axiosClient.post(
-                    "/single-player-session/score",
-                    {
-                        roundId: rounds[rounds.length - 1]._id,
-                        distance: dist,
-                    }
+                const result = await submitRoundScore(
+                    rounds[rounds.length - 1]._id,
+                    dist
                 );
+
                 setScore(result.data.score);
                 setDistance(dist);
                 displayResult();

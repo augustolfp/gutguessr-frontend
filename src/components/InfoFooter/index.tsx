@@ -6,7 +6,7 @@ export default function InfoFooter() {
     const isLast: boolean = rounds.length === session?.numOfRounds;
     return (
         <div className="px-6 flex items-center justify-center gap-2 h-1/6">
-            {distance && score && (
+            {distance !== null && score !== null && (
                 <div className="flex items-center">
                     <div className="stats shadow">
                         <div className="stat">

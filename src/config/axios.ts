@@ -26,3 +26,9 @@ export const submitRoundScore = async (roundId: string, distance: number) => {
         distance: distance,
     });
 };
+
+export const requestNextRound = async (sessionId: string) => {
+    return await axiosClient.post("/single-player-session/next", {
+        sessionId,
+    });
+};

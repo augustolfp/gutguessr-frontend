@@ -1,4 +1,8 @@
-import { getFirstRound, submitRoundScore } from "../config/axios";
+import {
+    getFirstRound,
+    submitRoundScore,
+    requestNextRound,
+} from "../config/axios";
 import { Loader } from "@googlemaps/js-api-loader";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
@@ -23,6 +27,7 @@ interface MapContext {
     rounds: Round[];
     distance: number | null;
     score: number | null;
+    goToNextRound: () => Promise<void>;
 }
 
 const AppContext = createContext({} as MapContext);
@@ -106,22 +111,19 @@ export function AppProvider({ children }: ProviderProps) {
         if (session && rounds.length === 0) {
             const { data } = await getFirstRound(session._id);
 
-            const { _id, lat, lng, heading, pitch, score, timestamp } =
-                data.rounds[0];
-
-            setRounds([
-                {
-                    _id,
-                    lat,
-                    lng,
-                    heading,
-                    pitch,
-                    score,
-                    timestamp,
-                },
-            ]);
+            setRounds([...data.rounds]);
 
             renderRound(data.rounds[0]);
+        }
+    };
+
+    const goToNextRound = async () => {
+        if (session) {
+            const { data } = await requestNextRound(session._id);
+            setRounds([...data.rounds]);
+            setDistance(null);
+            setScore(null);
+            await renderRound(data.rounds[data.rounds.length - 1]);
         }
     };
 
@@ -151,7 +153,10 @@ export function AppProvider({ children }: ProviderProps) {
     const submitDistance = async () => {
         const getDistance = await calculateDistance();
         if (getDistance) {
-            const result = await submitRoundScore(rounds[0]._id, getDistance);
+            const result = await submitRoundScore(
+                rounds[rounds.length - 1]._id,
+                getDistance
+            );
             setScore(result.data.score);
         }
     };
@@ -167,6 +172,7 @@ export function AppProvider({ children }: ProviderProps) {
                 submitDistance,
                 distance,
                 score,
+                goToNextRound,
             }}
         >
             {children}

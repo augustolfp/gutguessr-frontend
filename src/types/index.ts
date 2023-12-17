@@ -12,4 +12,5 @@ export type Round = {
     pitch: number;
     score: number | null;
     timestamp: number;
+    sessionId: string;
 };

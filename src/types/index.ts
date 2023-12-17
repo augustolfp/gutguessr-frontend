@@ -21,4 +21,11 @@ export type Score = {
     date: string;
     scores: number[];
     averageScore: number;
+    ranking: {
+        _id: string;
+        username: string;
+        date: string;
+        scores: number[];
+        averageScore: number;
+    }[];
 };

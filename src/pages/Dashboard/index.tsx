@@ -7,7 +7,6 @@ import CollapsibleTray from "../../components/CollapsibleTray";
 export default function Dashboard() {
     const { startGame } = useAppContext();
     useEffect(() => {
-        console.log("Ai meu caralho");
         startGame();
     }, []);
 

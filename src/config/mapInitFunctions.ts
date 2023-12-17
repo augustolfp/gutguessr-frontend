@@ -1,17 +1,15 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { mapBaseConfig, streetViewBaseConfig } from "./googleMapsApiConfig";
 
-const initMarker = async (map: google.maps.Map, loader: Loader) => {
-    const markerLoader = await loader.importLibrary("marker");
+export const initMarker = async (markerLoader: google.maps.MarkerLibrary) => {
     const marker = new markerLoader.AdvancedMarkerElement({
-        map: map,
         position: null,
     });
 
     return marker;
 };
 
-const traceDistanceLine = (
+export const traceDistanceLine = (
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement,
     map: google.maps.Map
@@ -31,16 +29,14 @@ const traceDistanceLine = (
     }
 };
 
-const computeDistance = async (
-    loader: Loader,
+export const computeDistance = async (
+    geometryLoader: google.maps.GeometryLibrary,
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement
 ) => {
-    const distanceLoader = await loader.importLibrary("geometry");
-
     if (marker1.position && marker2.position) {
         const distanceInMeters =
-            distanceLoader.spherical.computeDistanceBetween(
+            geometryLoader.spherical.computeDistanceBetween(
                 marker1.position,
                 marker2.position
             );
@@ -50,40 +46,42 @@ const computeDistance = async (
     return null;
 };
 
-export const renderResult = async (
-    lat: number,
-    lng: number,
-    map: google.maps.Map,
-    userMarker: google.maps.marker.AdvancedMarkerElement,
-    loader: Loader
+// export const renderResult = async (
+//     lat: number,
+//     lng: number,
+//     map: google.maps.Map,
+//     userMarker: google.maps.marker.AdvancedMarkerElement,
+//     loader: Loader
+// ) => {
+//     if (userMarker.position) {
+//         const exactMarker = await initMarker(map, loader);
+//         exactMarker.position = { lat, lng };
+
+//         traceDistanceLine(userMarker, exactMarker, map);
+//         const distance = await computeDistance(loader, userMarker, exactMarker);
+//         return { distance: distance };
+//     }
+//     return { distance: null };
+// };
+
+export const initMap = async (
+    mapLoader: google.maps.MapsLibrary,
+    userMarker: google.maps.marker.AdvancedMarkerElement
 ) => {
-    if (userMarker.position) {
-        const exactMarker = await initMarker(map, loader);
-        exactMarker.position = { lat, lng };
-
-        traceDistanceLine(userMarker, exactMarker, map);
-        const distance = await computeDistance(loader, userMarker, exactMarker);
-        return { distance: distance };
-    }
-    return { distance: null };
-};
-
-export const initMap = async (loader: Loader) => {
-    const mapLoader = await loader.importLibrary("maps");
     const map = new mapLoader.Map(
         document.getElementById("map") as HTMLElement,
         mapBaseConfig
     );
-    const userMarker = await initMarker(map, loader);
 
     map.addListener("click", (mapsMouseEvent: google.maps.MapMouseEvent) => {
         if (mapsMouseEvent.latLng) {
             const { lat, lng } = mapsMouseEvent.latLng;
+            userMarker.map = map;
             userMarker.position = { lat: lat(), lng: lng() };
         }
     });
 
-    return { map, userMarker };
+    return map;
 };
 
 export const initStreetView = async (
@@ -91,7 +89,7 @@ export const initStreetView = async (
     lng: number,
     heading: number,
     pitch: number,
-    loader: Loader
+    streetViewLoader: google.maps.StreetViewLibrary
 ) => {
     const streetViewOptions: google.maps.StreetViewPanoramaOptions = {
         position: {
@@ -105,7 +103,6 @@ export const initStreetView = async (
         ...streetViewBaseConfig,
     };
 
-    const streetViewLoader = await loader.importLibrary("streetView");
     const streetView = new streetViewLoader.StreetViewPanorama(
         document.getElementById("panorama") as HTMLElement,
         streetViewOptions

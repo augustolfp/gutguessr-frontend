@@ -1,24 +1,19 @@
 import { useAppContext } from "../../contexts/AppContext";
 import { useEffect } from "react";
-import ScoreBadge from "../../components/ScoreBadge";
+import RoundBadge from "../../components/RoundBadge";
 import InfoFooter from "../../components/InfoFooter";
 import CollapsibleTray from "../../components/CollapsibleTray";
 
 export default function Dashboard() {
-    const { init, getSeeds, seeds, round } = useAppContext();
+    const { startGame } = useAppContext();
     useEffect(() => {
-        getSeeds();
+        console.log("Ai meu caralho");
+        startGame();
     }, []);
-
-    useEffect(() => {
-        if (seeds.length !== 0) {
-            init();
-        }
-    }, [seeds, round]);
 
     return (
         <div className="w-screen h-screen">
-            <ScoreBadge />
+            <RoundBadge />
             <div className="relative h-5/6">
                 <div id="panorama" className="w-full h-full" />
 

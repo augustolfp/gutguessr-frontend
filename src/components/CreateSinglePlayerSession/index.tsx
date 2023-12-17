@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { axiosClient } from "../../config/axios";
+import { createSession } from "../../config/axios";
 import { useAppContext } from "../../contexts/AppContext";
+import { Link } from "react-router-dom";
 
 export default function CreateSinglePlayerSession() {
     const [username, setUsername] = useState<string>("");
@@ -11,26 +12,22 @@ export default function CreateSinglePlayerSession() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsLoading(true);
-        setIsError(false);
+        if (numOfRounds) {
+            setIsLoading(true);
+            setIsError(false);
 
-        try {
-            const result = await axiosClient.post(
-                "/single-player-session/new",
-                {
-                    username,
-                    numOfRounds,
-                }
-            );
+            try {
+                const result = await createSession(username, numOfRounds);
 
-            updateSession({
-                ...result.data,
-            });
-            return;
-        } catch (err) {
-            setIsError(true);
-        } finally {
-            setIsLoading(false);
+                updateSession({
+                    ...result.data,
+                });
+                return;
+            } catch (err) {
+                setIsError(true);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -40,9 +37,11 @@ export default function CreateSinglePlayerSession() {
                 className="gap-2 card-body items-center text-center"
                 onSubmit={handleSubmit}
             >
-                <h2>Single-player Session</h2>
+                <h2 className="font-semibold text-2xl">
+                    Single-player Session
+                </h2>
                 {!session && (
-                    <div>
+                    <div className="flex flex-col gap-3">
                         <div>
                             <label htmlFor="username" className="label">
                                 Username:
@@ -100,9 +99,9 @@ export default function CreateSinglePlayerSession() {
                         <h3 className="text-success">
                             Your game is ready, {session.username}!
                         </h3>
-                        <button className="btn btn-primary">
+                        <Link to="/single-player" className="btn btn-primary">
                             Go to first round!
-                        </button>
+                        </Link>
                     </div>
                 )}
             </form>

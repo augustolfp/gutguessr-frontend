@@ -1,33 +1,37 @@
 import { useAppContext } from "../../contexts/AppContext";
+import { Link } from "react-router-dom";
 
 export default function InfoFooter() {
-    const { nextRound, scores } = useAppContext();
-
+    const { goToNextRound, session, rounds, distance, score } = useAppContext();
+    const isLast: boolean = rounds.length === session?.numOfRounds;
     return (
-        <div className="px-6 flex items-center gap-2 h-1/6">
-            <button className="btn btn-secondary" onClick={nextRound}>
-                Next round!
-            </button>
-            <div>
-                <h2>Scores:</h2>
-                <ul>
-                    {scores.map((score, index) => (
-                        <li key={index} className="flex gap-1">
-                            <span className="font-black">
-                                Round {score.round + 1}
-                            </span>
-                            <span>
-                                <strong>Score:</strong>
-                                {score.score}
-                            </span>
-                            <span>
-                                <strong>Distance:</strong>
-                                {score.distance} km
-                            </span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+        <div className="px-6 flex items-center justify-center gap-2 h-1/6">
+            {distance && score && (
+                <div className="flex items-center">
+                    <div className="stats shadow">
+                        <div className="stat">
+                            <div className="stat-title">
+                                {distance} km from exact location
+                            </div>
+                            <div className="stat-value">{score} POINTS</div>
+                            <div className="stat-desc">Of 5000 points max</div>
+                        </div>
+                    </div>
+
+                    {isLast ? (
+                        <Link to="/results" className="btn btn-secondary">
+                            See results!
+                        </Link>
+                    ) : (
+                        <button
+                            className="btn btn-secondary"
+                            onClick={goToNextRound}
+                        >
+                            Next round!
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

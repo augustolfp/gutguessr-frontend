@@ -37,9 +37,11 @@ export default function CreateSinglePlayerSession() {
                 className="gap-2 card-body items-center text-center"
                 onSubmit={handleSubmit}
             >
-                <h2>Single-player Session</h2>
+                <h2 className="font-semibold text-2xl">
+                    Single-player Session
+                </h2>
                 {!session && (
-                    <div>
+                    <div className="flex flex-col gap-3">
                         <div>
                             <label htmlFor="username" className="label">
                                 Username:

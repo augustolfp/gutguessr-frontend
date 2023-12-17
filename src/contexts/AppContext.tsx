@@ -129,6 +129,7 @@ export function AppProvider({ children }: ProviderProps) {
 
     const displayResult = () => {
         if (map && userMarker && exactMarker && geometryLoader) {
+            exactMarker.map = map;
             traceDistanceLine(userMarker, exactMarker, map);
         }
     };

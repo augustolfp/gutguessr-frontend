@@ -44,7 +44,10 @@ export default function SessionResults() {
                                 {ranking.map((scoreItem, index) => {
                                     if (scoreItem.sessionId === session?._id) {
                                         return (
-                                            <tr className="bg-base-200">
+                                            <tr
+                                                key={index}
+                                                className="bg-base-200"
+                                            >
                                                 <th>{index + 1}</th>
                                                 <td>
                                                     {scoreItem.username}{" "}
@@ -62,7 +65,7 @@ export default function SessionResults() {
                                         );
                                     }
                                     return (
-                                        <tr>
+                                        <tr key={index}>
                                             <th>{index + 1}</th>
                                             <td>{scoreItem.username}</td>
                                             <td>{scoreItem.scores.length}</td>

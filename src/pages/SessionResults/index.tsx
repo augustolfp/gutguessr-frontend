@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getSessionScore } from "../../config/axios";
+import { getSessionScore, getRanking } from "../../config/axios";
 import { useAppContext } from "../../contexts/AppContext";
 import { Score } from "../../types";
 
 export default function SessionResults() {
     const [score, setScore] = useState<Score | null>(null);
+    const [ranking, setRanking] = useState<Score[]>([]);
 
     const { session } = useAppContext();
 
@@ -13,8 +14,14 @@ export default function SessionResults() {
             const result = await getSessionScore(sessionId);
             setScore(result.data);
         };
+
+        const getSessionRanking = async () => {
+            const result = await getRanking();
+            setRanking(result.data);
+        };
         if (session) {
             getScore(session._id);
+            getSessionRanking();
         }
     }, []);
 
@@ -34,10 +41,13 @@ export default function SessionResults() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {score.ranking.map((scoreItem, index) => {
+                                {ranking.map((scoreItem, index) => {
                                     if (scoreItem.sessionId === session?._id) {
                                         return (
-                                            <tr className="bg-base-200">
+                                            <tr
+                                                key={index}
+                                                className="bg-base-200"
+                                            >
                                                 <th>{index + 1}</th>
                                                 <td>
                                                     {scoreItem.username}{" "}
@@ -55,7 +65,7 @@ export default function SessionResults() {
                                         );
                                     }
                                     return (
-                                        <tr>
+                                        <tr key={index}>
                                             <th>{index + 1}</th>
                                             <td>{scoreItem.username}</td>
                                             <td>{scoreItem.scores.length}</td>

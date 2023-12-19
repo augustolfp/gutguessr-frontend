@@ -18,15 +18,8 @@ export type Round = {
 export type Score = {
     _id: string;
     username: string;
+    sessionId: string;
     date: string;
     scores: number[];
     averageScore: number;
-    ranking: {
-        _id: string;
-        username: string;
-        date: string;
-        scores: number[];
-        averageScore: number;
-        sessionId: string;
-    }[];
 };

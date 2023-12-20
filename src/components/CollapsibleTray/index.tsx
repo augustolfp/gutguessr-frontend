@@ -1,11 +1,11 @@
-import { useAppContext } from "../../contexts/AppContext";
+import { useMapContext } from "../../contexts/MapContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { submitRoundScore } from "../../config/axios";
 
 export default function CollapsibleTray() {
-    const { displayResult, calculateDistance, session } = useAppContext();
+    const { displayResult, calculateDistance, session } = useMapContext();
     const [isLoading, setIsLoading] = useState(false);
     const [warning, setWarning] = useState("");
     const [isTrayOpen, setIsTrayOpen] = useState(false);

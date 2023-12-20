@@ -21,13 +21,13 @@ interface MapContext {
     calculateDistance: () => Promise<number | null>;
 }
 
-const AppContext = createContext({} as MapContext);
+const MapContext = createContext({} as MapContext);
 
-export function useAppContext() {
-    return useContext(AppContext);
+export function useMapContext() {
+    return useContext(MapContext);
 }
 
-export function AppProvider({ children }: ProviderProps) {
+export function MapProvider({ children }: ProviderProps) {
     const {
         loader,
         markerLoader,
@@ -100,7 +100,7 @@ export function AppProvider({ children }: ProviderProps) {
     };
 
     return (
-        <AppContext.Provider
+        <MapContext.Provider
             value={{
                 session,
                 updateSession,
@@ -111,6 +111,6 @@ export function AppProvider({ children }: ProviderProps) {
             }}
         >
             {children}
-        </AppContext.Provider>
+        </MapContext.Provider>
     );
 }

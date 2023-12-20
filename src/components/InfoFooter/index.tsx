@@ -1,8 +1,8 @@
-import { useAppContext } from "../../contexts/AppContext";
+import { useMapContext } from "../../contexts/MapContext";
 import { Link } from "react-router-dom";
 
 export default function InfoFooter() {
-    const { requestNewRound, session, rounds } = useAppContext();
+    const { requestNewRound, session, rounds } = useMapContext();
     const isLast: boolean = rounds.length === session?.numOfRounds;
     return (
         <div className="px-6 flex items-center justify-center gap-2 h-1/6">

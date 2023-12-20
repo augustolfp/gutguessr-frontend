@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { getSessionScore, getRanking } from "../../config/axios";
-import { useAppContext } from "../../contexts/AppContext";
+import { useMapContext } from "../../contexts/MapContext";
 import { Score } from "../../types";
 
 export default function SessionResults() {
     const [score, setScore] = useState<Score | null>(null);
     const [ranking, setRanking] = useState<Score[]>([]);
 
-    const { session } = useAppContext();
+    const { session } = useMapContext();
 
     useEffect(() => {
         const getScore = async (sessionId: string) => {

@@ -1,7 +1,7 @@
-import { useAppContext } from "../../contexts/AppContext";
+import { useMapContext } from "../../contexts/MapContext";
 
 export default function RoundBadge() {
-    const { session, rounds } = useAppContext();
+    const { session, rounds } = useMapContext();
     const numerator = rounds.length;
     const denominator = session?.numOfRounds;
 

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import { AppProvider } from "./contexts/AppContext";
+import { MapProvider } from "./contexts/MapContext";
 
 import Navbar from "./components/Navbar";
 import Homepage from "./pages/Homepage";
@@ -10,14 +10,14 @@ import SessionResults from "./pages/SessionResults";
 function App() {
     return (
         <Router>
-            <AppProvider>
+            <MapProvider>
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Homepage />} />
                     <Route path="/single-player" element={<Dashboard />} />
                     <Route path="/results" element={<SessionResults />} />
                 </Routes>
-            </AppProvider>
+            </MapProvider>
         </Router>
     );
 }

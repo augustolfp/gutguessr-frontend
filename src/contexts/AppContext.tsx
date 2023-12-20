@@ -2,9 +2,7 @@ import { getFirstRound, submitRoundScore, requestRound } from "../config/axios";
 import useLoaders from "../hooks/useLoaders";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
-    initMap,
-    initStreetView,
-    initMarker,
+    renderMaps,
     computeDistance,
     traceDistanceLine,
 } from "../config/mapInitFunctions";
@@ -56,22 +54,16 @@ export function AppProvider({ children }: ProviderProps) {
 
     const renderRound = async (round: Round) => {
         if (loader && markerLoader && mapLoader && streetViewLoader) {
-            const initUserMarker = await initMarker(markerLoader);
-            const initExactMarker = await initMarker(markerLoader);
-            initExactMarker.position = { lat: round.lat, lng: round.lng };
-
-            const initUserMap = await initMap(mapLoader, initUserMarker);
-            const panorama = await initStreetView(
-                round.lat,
-                round.lng,
-                round.heading,
-                round.pitch,
+            const { map, userMarker, exactMarker } = await renderMaps(
+                round,
+                markerLoader,
+                mapLoader,
                 streetViewLoader
             );
 
-            setMap(initUserMap);
-            setUserMarker(initUserMarker);
-            setExactMarker(initExactMarker);
+            setMap(map);
+            setUserMarker(userMarker);
+            setExactMarker(exactMarker);
         }
     };
 

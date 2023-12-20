@@ -2,12 +2,11 @@ import { useAppContext } from "../../contexts/AppContext";
 import { Link } from "react-router-dom";
 
 export default function InfoFooter() {
-    const { requestNewRound, session, rounds, distance, score } =
-        useAppContext();
+    const { requestNewRound, session, rounds } = useAppContext();
     const isLast: boolean = rounds.length === session?.numOfRounds;
     return (
         <div className="px-6 flex items-center justify-center gap-2 h-1/6">
-            {distance !== null && score !== null && (
+            {/* {distance !== null && score !== null && (
                 <div className="flex items-center">
                     <div className="stats shadow">
                         <div className="stat">
@@ -32,7 +31,7 @@ export default function InfoFooter() {
                         </button>
                     )}
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

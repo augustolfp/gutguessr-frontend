@@ -1,6 +1,6 @@
-import { getFirstRound, submitRoundScore, requestRound } from "../config/axios";
+import { submitRoundScore, requestRound } from "../config/axios";
 import useLoaders from "../hooks/useLoaders";
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext } from "react";
 import {
     renderMaps,
     computeDistance,
@@ -16,11 +16,9 @@ interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
     displayResult: () => void;
-    submitDistance: () => Promise<void>;
     rounds: Round[];
-    distance: number | null;
-    score: number | null;
     requestNewRound: () => Promise<void>;
+    calculateDistance: () => Promise<number | null>;
 }
 
 const AppContext = createContext({} as MapContext);
@@ -101,14 +99,6 @@ export function AppProvider({ children }: ProviderProps) {
         return null;
     };
 
-    const submitDistance = async () => {
-        const getDistance = await calculateDistance();
-        if (getDistance && session) {
-            const result = await submitRoundScore(session._id, getDistance);
-            setScore(result.data.score);
-        }
-    };
-
     return (
         <AppContext.Provider
             value={{
@@ -117,9 +107,7 @@ export function AppProvider({ children }: ProviderProps) {
                 requestNewRound,
                 displayResult,
                 rounds,
-                submitDistance,
-                distance,
-                score,
+                calculateDistance,
             }}
         >
             {children}

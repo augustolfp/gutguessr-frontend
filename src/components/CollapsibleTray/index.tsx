@@ -2,30 +2,19 @@ import { useMapContext } from "../../contexts/MapContext";
 import { useDataContext } from "../../contexts/DataContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiFillWarning } from "react-icons/ai";
 
 export default function CollapsibleTray() {
-    const { displayResult } = useMapContext();
-    const { score, distance, isLate, submitScore } = useDataContext();
-    const [isLoading, setIsLoading] = useState(false);
-    const [warning, setWarning] = useState("");
+    const { submitScore, status } = useDataContext();
     const [isTrayOpen, setIsTrayOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const onSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setWarning("");
-        try {
-            await submitScore();
-            displayResult();
-        } catch (err) {
-            if (typeof err === "string") {
-                setWarning(err);
-                return;
-            }
-            setWarning("Unknown error.");
-        } finally {
-            setIsLoading(false);
+        const message = await submitScore();
+
+        if (message) {
+            setErrorMessage(message);
         }
     };
 
@@ -42,15 +31,27 @@ export default function CollapsibleTray() {
             <div className="flex flex-col gap-1 h-full w-full">
                 <div id="map" className={`${mapContainerStyle}`}></div>
                 {isTrayOpen && (
-                    <div>
-                        <p>{warning}</p>
-                        <button
-                            className="btn btn-primary w-full"
-                            onClick={onSubmit}
-                            disabled={isLoading || score !== null}
-                        >
-                            {isLoading ? "Submitting..." : "Submit guess!"}
-                        </button>
+                    <div className="flex flex-col gap-1">
+                        {status === "ERROR" && (
+                            <div
+                                role="alert"
+                                className="alert alert-warning py-1 rounded-lg flex items-center justify-center"
+                            >
+                                <AiFillWarning />
+                                <span className="text-sm">{errorMessage}</span>
+                            </div>
+                        )}
+                        {status !== "SUCCESS" && (
+                            <button
+                                className="btn btn-primary w-full"
+                                onClick={onSubmit}
+                                disabled={status === "LOADING"}
+                            >
+                                {status === "LOADING"
+                                    ? "Submitting..."
+                                    : "Submit guess!"}
+                            </button>
+                        )}
                     </div>
                 )}
                 <button

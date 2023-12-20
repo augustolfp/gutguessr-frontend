@@ -11,6 +11,7 @@ interface DataContext {
     distance: number | null;
     isLate: boolean;
     submitScore: () => Promise<void>;
+    clearData: () => void;
 }
 
 const DataContext = createContext({} as DataContext);
@@ -39,8 +40,16 @@ export function DataProvider({ children }: ProviderProps) {
         setIsLate(data.rounds[data.rounds.length - 1].isScoreSubmitLate);
     };
 
+    const clearData = () => {
+        setScore(null);
+        setDistance(null);
+        setIsLate(false);
+    };
+
     return (
-        <DataContext.Provider value={{ score, distance, isLate, submitScore }}>
+        <DataContext.Provider
+            value={{ score, distance, isLate, submitScore, clearData }}
+        >
             {children}
         </DataContext.Provider>
     );

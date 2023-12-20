@@ -44,13 +44,10 @@ export default function CollapsibleTray() {
                 {isTrayOpen && (
                     <div>
                         <p>{warning}</p>
-                        <p>
-                            {score}, {distance}, {isLate ? "Late" : "Not late"}
-                        </p>
                         <button
                             className="btn btn-primary w-full"
                             onClick={onSubmit}
-                            disabled={isLoading}
+                            disabled={isLoading || score !== null}
                         >
                             {isLoading ? "Submitting..." : "Submit guess!"}
                         </button>

@@ -1,17 +1,32 @@
-import { useAppContext } from "../../contexts/AppContext";
+import { useMapContext } from "../../contexts/MapContext";
+import { useDataContext } from "../../contexts/DataContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 
 export default function CollapsibleTray() {
-    const { displayResult, submitDistance, rounds } = useAppContext();
+    const { displayResult } = useMapContext();
+    const { score, distance, isLate, submitScore } = useDataContext();
+    const [isLoading, setIsLoading] = useState(false);
+    const [warning, setWarning] = useState("");
     const [isTrayOpen, setIsTrayOpen] = useState(false);
 
-    const onSubmit = (e: React.SyntheticEvent) => {
+    const onSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-        submitDistance().then(() => {
+        setIsLoading(true);
+        setWarning("");
+        try {
+            await submitScore();
             displayResult();
-        });
+        } catch (err) {
+            if (typeof err === "string") {
+                setWarning(err);
+                return;
+            }
+            setWarning("Unknown error.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     let trayStyle: string = isTrayOpen
@@ -27,12 +42,16 @@ export default function CollapsibleTray() {
             <div className="flex flex-col gap-1 h-full w-full">
                 <div id="map" className={`${mapContainerStyle}`}></div>
                 {isTrayOpen && (
-                    <button
-                        className="btn btn-primary w-full"
-                        onClick={onSubmit}
-                    >
-                        Submit guess!
-                    </button>
+                    <div>
+                        <p>{warning}</p>
+                        <button
+                            className="btn btn-primary w-full"
+                            onClick={onSubmit}
+                            disabled={isLoading || score !== null}
+                        >
+                            {isLoading ? "Submitting..." : "Submit guess!"}
+                        </button>
+                    </div>
                 )}
                 <button
                     className="btn btn-neutral btn-sm md:btn-md aspect-square rounded-full p-2 absolute top-1 right-1 z-20"

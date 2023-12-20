@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createSession } from "../../config/axios";
-import { useAppContext } from "../../contexts/AppContext";
+import { useMapContext } from "../../contexts/MapContext";
 import { Link } from "react-router-dom";
 
 export default function CreateSinglePlayerSession() {
@@ -8,7 +8,7 @@ export default function CreateSinglePlayerSession() {
     const [numOfRounds, setNumOfRounds] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
-    const { session, updateSession } = useAppContext();
+    const { session, updateSession } = useMapContext();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

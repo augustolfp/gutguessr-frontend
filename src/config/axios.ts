@@ -15,20 +15,20 @@ export const createSession = async (username: string, numOfRounds: number) => {
 };
 
 export const getFirstRound = async (sessionId: string) => {
-    return await axiosClient.post("/single-player-session/start", {
+    return await axiosClient.post("/single-player-session/round", {
         sessionId: sessionId,
     });
 };
 
-export const submitRoundScore = async (roundId: string, distance: number) => {
+export const submitRoundScore = async (sessionId: string, distance: number) => {
     return await axiosClient.post("/single-player-session/score", {
-        roundId: roundId,
+        sessionId,
         distance: distance,
     });
 };
 
-export const requestNextRound = async (sessionId: string) => {
-    return await axiosClient.post("/single-player-session/next", {
+export const requestRound = async (sessionId: string) => {
+    return await axiosClient.post("/single-player-session/round", {
         sessionId,
     });
 };

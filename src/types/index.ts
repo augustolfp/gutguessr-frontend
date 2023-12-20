@@ -19,7 +19,7 @@ export type Score = {
     _id: string;
     username: string;
     sessionId: string;
-    date: string;
+    creationTimestamp: number;
     scores: number[];
     averageScore: number;
 };

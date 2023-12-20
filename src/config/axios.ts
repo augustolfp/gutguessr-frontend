@@ -33,10 +33,6 @@ export const requestRound = async (sessionId: string) => {
     });
 };
 
-export const getSessionScore = async (sessionId: string) => {
-    return await axiosClient.get(`/single-player-session/score/${sessionId}`);
-};
-
-export const getRanking = async () => {
-    return await axiosClient.get("/single-player-session/ranking");
+export const getRanking = async (sessionId: string) => {
+    return await axiosClient.get(`/ranking/${sessionId}`);
 };

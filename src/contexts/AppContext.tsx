@@ -1,8 +1,4 @@
-import {
-    getFirstRound,
-    submitRoundScore,
-    requestNextRound,
-} from "../config/axios";
+import { getFirstRound, submitRoundScore, requestRound } from "../config/axios";
 import useLoaders from "../hooks/useLoaders";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
@@ -21,13 +17,12 @@ interface ProviderProps {
 interface MapContext {
     session: Session | null;
     updateSession: (session: Session) => Session | null;
-    startGame: () => Promise<void>;
     displayResult: () => void;
     submitDistance: () => Promise<void>;
     rounds: Round[];
     distance: number | null;
     score: number | null;
-    goToNextRound: () => Promise<void>;
+    requestNewRound: () => Promise<void>;
 }
 
 const AppContext = createContext({} as MapContext);
@@ -80,19 +75,9 @@ export function AppProvider({ children }: ProviderProps) {
         }
     };
 
-    const startGame = async () => {
-        if (session && rounds.length === 0) {
-            const { data } = await getFirstRound(session._id);
-
-            setRounds([...data.rounds]);
-
-            renderRound(data.rounds[0]);
-        }
-    };
-
-    const goToNextRound = async () => {
+    const requestNewRound = async () => {
         if (session) {
-            const { data } = await requestNextRound(session._id);
+            const { data } = await requestRound(session._id);
             setRounds([...data.rounds]);
             setDistance(null);
             setScore(null);
@@ -137,13 +122,12 @@ export function AppProvider({ children }: ProviderProps) {
             value={{
                 session,
                 updateSession,
-                startGame,
+                requestNewRound,
                 displayResult,
                 rounds,
                 submitDistance,
                 distance,
                 score,
-                goToNextRound,
             }}
         >
             {children}

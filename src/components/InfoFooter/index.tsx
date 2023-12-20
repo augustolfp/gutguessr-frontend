@@ -2,7 +2,8 @@ import { useAppContext } from "../../contexts/AppContext";
 import { Link } from "react-router-dom";
 
 export default function InfoFooter() {
-    const { goToNextRound, session, rounds, distance, score } = useAppContext();
+    const { requestNewRound, session, rounds, distance, score } =
+        useAppContext();
     const isLast: boolean = rounds.length === session?.numOfRounds;
     return (
         <div className="px-6 flex items-center justify-center gap-2 h-1/6">
@@ -25,7 +26,7 @@ export default function InfoFooter() {
                     ) : (
                         <button
                             className="btn btn-secondary"
-                            onClick={goToNextRound}
+                            onClick={requestNewRound}
                         >
                             Next round!
                         </button>

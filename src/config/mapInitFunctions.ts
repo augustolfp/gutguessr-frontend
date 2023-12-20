@@ -34,16 +34,16 @@ export const computeDistance = async (
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement
 ) => {
-    if (marker1.position && marker2.position) {
-        const distanceInMeters =
-            geometryLoader.spherical.computeDistanceBetween(
-                marker1.position,
-                marker2.position
-            );
-        return distanceInMeters;
+    if (!marker1.position || !marker2.position) {
+        throw "Markers are not defined correctly.";
     }
 
-    return null;
+    const distanceInMeters = geometryLoader.spherical.computeDistanceBetween(
+        marker1.position,
+        marker2.position
+    );
+
+    return distanceInMeters;
 };
 
 const initMap = async (mapLoader: google.maps.MapsLibrary) => {

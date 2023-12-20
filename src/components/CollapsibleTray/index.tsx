@@ -1,43 +1,31 @@
 import { useMapContext } from "../../contexts/MapContext";
+import { useDataContext } from "../../contexts/DataContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { submitRoundScore } from "../../config/axios";
 
 export default function CollapsibleTray() {
-    const { displayResult, calculateDistance, session } = useMapContext();
+    const { displayResult } = useMapContext();
+    const { score, distance, isLate, submitScore } = useDataContext();
     const [isLoading, setIsLoading] = useState(false);
     const [warning, setWarning] = useState("");
     const [isTrayOpen, setIsTrayOpen] = useState(false);
-    const [score, setScore] = useState<number | null>(null);
-    const [distance, setDistance] = useState<number | null>(null);
-    const [isLate, setIsLate] = useState(false);
 
     const onSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-        setWarning("");
         setIsLoading(true);
-
-        const distance = await calculateDistance();
-        if (distance === null) {
-            setWarning("Choose a place on the map before submitting!");
-            setIsLoading(false);
-            return;
-        }
-
-        if (distance && session) {
-            setDistance(distance);
-            try {
-                const { data } = await submitRoundScore(session._id, distance);
-                displayResult();
-                setScore(data.rounds[data.rounds.length - 1].score);
-                setIsLate(data.rounds[data.rounds.length - 1].isLate);
-            } catch (err: any) {
-                const errMsg = err.message ?? "Unexpect error";
-                setWarning(errMsg);
-            } finally {
-                setIsLoading(false);
+        setWarning("");
+        try {
+            await submitScore();
+            displayResult();
+        } catch (err) {
+            if (typeof err === "string") {
+                setWarning(err);
+                return;
             }
+            setWarning("Unknown error.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -57,7 +45,7 @@ export default function CollapsibleTray() {
                     <div>
                         <p>{warning}</p>
                         <p>
-                            {score}, {distance}, {isLate}
+                            {score}, {distance}, {isLate ? "Late" : "Not late"}
                         </p>
                         <button
                             className="btn btn-primary w-full"

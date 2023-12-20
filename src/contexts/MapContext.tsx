@@ -1,4 +1,4 @@
-import { submitRoundScore, requestRound } from "../config/axios";
+import { requestRound } from "../config/axios";
 import useLoaders from "../hooks/useLoaders";
 import { createContext, useState, useContext } from "react";
 import {
@@ -18,7 +18,7 @@ interface MapContext {
     displayResult: () => void;
     rounds: Round[];
     requestNewRound: () => Promise<void>;
-    calculateDistance: () => Promise<number | null>;
+    calculateDistance: () => Promise<number>;
 }
 
 const MapContext = createContext({} as MapContext);
@@ -43,8 +43,6 @@ export function MapProvider({ children }: ProviderProps) {
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
     const [exactMarker, setExactMarker] =
         useState<google.maps.marker.AdvancedMarkerElement | null>(null);
-    const [distance, setDistance] = useState<number | null>(null);
-    const [score, setScore] = useState<number | null>(null);
     const updateSession = (session: Session) => {
         setSession(session);
         return session;
@@ -69,8 +67,6 @@ export function MapProvider({ children }: ProviderProps) {
         if (session) {
             const { data } = await requestRound(session._id);
             setRounds([...data.rounds]);
-            setDistance(null);
-            setScore(null);
             await renderRound(data.rounds[data.rounds.length - 1]);
         }
     };
@@ -83,20 +79,20 @@ export function MapProvider({ children }: ProviderProps) {
     };
 
     const calculateDistance = async () => {
-        if (userMarker && exactMarker && geometryLoader) {
-            const dist = await computeDistance(
-                geometryLoader,
-                userMarker,
-                exactMarker
-            );
-
-            if (dist) {
-                setDistance(Math.floor(dist / 1000));
-                return Math.floor(dist / 1000);
-            }
-            return null;
+        if (!userMarker) {
+            throw "No point selected on the map.";
         }
-        return null;
+
+        if (!exactMarker || !geometryLoader) {
+            throw "Loader or marker are not properly setup.";
+        }
+
+        const distance = await computeDistance(
+            geometryLoader,
+            userMarker,
+            exactMarker
+        );
+        return Math.floor(distance / 1000);
     };
 
     return (

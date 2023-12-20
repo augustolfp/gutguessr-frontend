@@ -17,8 +17,9 @@ interface MapContext {
     updateSession: (session: Session) => Session | null;
     displayResult: () => void;
     rounds: Round[];
-    requestNewRound: () => Promise<void>;
     calculateDistance: () => Promise<number>;
+    updateRoundsList: () => Promise<Round>;
+    renderRound: (round: Round) => Promise<void>;
 }
 
 const MapContext = createContext({} as MapContext);
@@ -49,26 +50,31 @@ export function MapProvider({ children }: ProviderProps) {
     };
 
     const renderRound = async (round: Round) => {
-        if (loader && markerLoader && mapLoader && streetViewLoader) {
-            const { map, userMarker, exactMarker } = await renderMaps(
-                round,
-                markerLoader,
-                mapLoader,
-                streetViewLoader
-            );
-
-            setMap(map);
-            setUserMarker(userMarker);
-            setExactMarker(exactMarker);
+        if (!loader || !markerLoader || !mapLoader || !streetViewLoader) {
+            throw "Loaders are not properly setup.";
         }
+
+        const { map, userMarker, exactMarker } = await renderMaps(
+            round,
+            markerLoader,
+            mapLoader,
+            streetViewLoader
+        );
+
+        setMap(map);
+        setUserMarker(userMarker);
+        setExactMarker(exactMarker);
     };
 
-    const requestNewRound = async () => {
-        if (session) {
-            const { data } = await requestRound(session._id);
-            setRounds([...data.rounds]);
-            await renderRound(data.rounds[data.rounds.length - 1]);
+    const updateRoundsList = async (): Promise<Round> => {
+        if (!session) {
+            throw "Session is not defined.";
         }
+        const { data } = await requestRound(session._id);
+        setRounds([...data.rounds]);
+
+        const lastRound = data.rounds[data.rounds.length - 1];
+        return lastRound;
     };
 
     const displayResult = () => {
@@ -79,12 +85,16 @@ export function MapProvider({ children }: ProviderProps) {
     };
 
     const calculateDistance = async () => {
-        if (!userMarker) {
-            throw "No point selected on the map.";
+        if (!geometryLoader) {
+            throw "Google Geometry Loader is not defined.";
         }
 
-        if (!exactMarker || !geometryLoader) {
-            throw "Loader or marker are not properly setup.";
+        if (!userMarker || !exactMarker) {
+            throw "Markers are not defined.";
+        }
+
+        if (!userMarker.position) {
+            throw "No point selected on the map.";
         }
 
         const distance = await computeDistance(
@@ -92,7 +102,8 @@ export function MapProvider({ children }: ProviderProps) {
             userMarker,
             exactMarker
         );
-        return Math.floor(distance / 1000);
+
+        return distance;
     };
 
     return (
@@ -100,10 +111,11 @@ export function MapProvider({ children }: ProviderProps) {
             value={{
                 session,
                 updateSession,
-                requestNewRound,
                 displayResult,
                 rounds,
                 calculateDistance,
+                updateRoundsList,
+                renderRound,
             }}
         >
             {children}

@@ -10,8 +10,9 @@ interface DataContext {
     score: number | null;
     distance: number | null;
     isLate: boolean;
-    submitScore: () => Promise<void>;
-    clearData: () => void;
+    startNewRound: () => Promise<void>;
+    submitScore: () => Promise<string | undefined>;
+    status: "IDLE" | "LOADING" | "ERROR" | "SUCCESS";
 }
 
 const DataContext = createContext({} as DataContext);
@@ -23,32 +24,68 @@ export function useDataContext() {
 export function DataProvider({ children }: ProviderProps) {
     const [score, setScore] = useState<number | null>(null);
     const [distance, setDistance] = useState<number | null>(null);
-
     const [isLate, setIsLate] = useState(false);
-
-    const { calculateDistance, session } = useMapContext();
+    const [status, setStatus] = useState<
+        "IDLE" | "LOADING" | "ERROR" | "SUCCESS"
+    >("IDLE");
+    const {
+        calculateDistance,
+        session,
+        displayResult,
+        updateRoundsList,
+        renderRound,
+    } = useMapContext();
 
     const submitScore = async () => {
-        const distance = await calculateDistance();
-        setDistance(distance);
-        if (!session?._id) {
-            throw "Session not found.";
-        }
+        try {
+            setStatus("LOADING");
+            const distance = await calculateDistance();
+            setDistance(distance);
 
-        const { data } = await submitRoundScore(session?._id, distance);
-        setScore(data.rounds[data.rounds.length - 1].score);
-        setIsLate(data.rounds[data.rounds.length - 1].isScoreSubmitLate);
+            if (!session?._id) {
+                throw "Session not found.";
+            }
+            const { data } = await submitRoundScore(session?._id, distance);
+            setScore(data.rounds[data.rounds.length - 1].score);
+            setIsLate(data.rounds[data.rounds.length - 1].isScoreSubmitLate);
+            setStatus("SUCCESS");
+            displayResult();
+        } catch (err) {
+            setStatus("ERROR");
+            if (typeof err === "string") {
+                return err;
+            }
+            return "A unknown error happened";
+        }
+    };
+
+    const startNewRound = async () => {
+        try {
+            const newRound = await updateRoundsList();
+            await renderRound(newRound);
+            clearData();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const clearData = () => {
         setScore(null);
         setDistance(null);
         setIsLate(false);
+        setStatus("IDLE");
     };
 
     return (
         <DataContext.Provider
-            value={{ score, distance, isLate, submitScore, clearData }}
+            value={{
+                score,
+                distance,
+                isLate,
+                submitScore,
+                status,
+                startNewRound,
+            }}
         >
             {children}
         </DataContext.Provider>

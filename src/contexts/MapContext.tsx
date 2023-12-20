@@ -79,12 +79,16 @@ export function MapProvider({ children }: ProviderProps) {
     };
 
     const calculateDistance = async () => {
-        if (!userMarker) {
-            throw "No point selected on the map.";
+        if (!geometryLoader) {
+            throw "Google Geometry Loader is not defined.";
         }
 
-        if (!exactMarker || !geometryLoader) {
-            throw "Loader or marker are not properly setup.";
+        if (!userMarker || !exactMarker) {
+            throw "Markers are not defined.";
+        }
+
+        if (!userMarker.position) {
+            throw "No point selected on the map.";
         }
 
         const distance = await computeDistance(
@@ -92,7 +96,8 @@ export function MapProvider({ children }: ProviderProps) {
             userMarker,
             exactMarker
         );
-        return Math.floor(distance / 1000);
+
+        return distance;
     };
 
     return (

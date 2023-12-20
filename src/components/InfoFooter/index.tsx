@@ -3,8 +3,8 @@ import { useDataContext } from "../../contexts/DataContext";
 import { Link } from "react-router-dom";
 
 export default function InfoFooter() {
-    const { requestNewRound, session, rounds } = useMapContext();
-    const { score, distance, isLate, clearData } = useDataContext();
+    const { session, rounds } = useMapContext();
+    const { score, distance, isLate, startNewRound } = useDataContext();
     const isLast: boolean = rounds.length === session?.numOfRounds;
 
     return (
@@ -35,8 +35,7 @@ export default function InfoFooter() {
                         <button
                             className="btn btn-secondary"
                             onClick={() => {
-                                clearData();
-                                requestNewRound();
+                                startNewRound();
                             }}
                         >
                             Next round!

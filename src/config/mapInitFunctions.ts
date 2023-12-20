@@ -34,8 +34,12 @@ export const computeDistance = async (
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement
 ) => {
-    if (!marker1.position || !marker2.position) {
-        throw "Markers are not defined correctly.";
+    if (!marker1.position) {
+        throw "User Marker is missing the position property";
+    }
+
+    if (!marker2.position) {
+        throw "Exact Marker is missing the position property";
     }
 
     const distanceInMeters = geometryLoader.spherical.computeDistanceBetween(
@@ -43,7 +47,7 @@ export const computeDistance = async (
         marker2.position
     );
 
-    return distanceInMeters;
+    return Math.floor(distanceInMeters / 1000);
 };
 
 const initMap = async (mapLoader: google.maps.MapsLibrary) => {

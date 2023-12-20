@@ -1,4 +1,5 @@
 import { useMapContext } from "../../contexts/MapContext";
+import { useDataContext } from "../../contexts/DataContext";
 import { useEffect } from "react";
 import RoundBadge from "../../components/RoundBadge";
 import InfoFooter from "../../components/InfoFooter";
@@ -6,9 +7,10 @@ import CollapsibleTray from "../../components/CollapsibleTray";
 import CountDownTimer from "../../components/CountdownTimer";
 
 export default function Dashboard() {
-    const { requestNewRound, rounds } = useMapContext();
+    const { startNewRound } = useDataContext();
+    const { rounds } = useMapContext();
     useEffect(() => {
-        requestNewRound();
+        startNewRound();
     }, []);
 
     return (

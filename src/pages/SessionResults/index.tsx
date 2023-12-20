@@ -9,9 +9,11 @@ export default function SessionResults() {
     const { session } = useMapContext();
 
     useEffect(() => {
-        getRanking().then(({ data }) => {
-            setRanking(data);
-        });
+        if (session) {
+            getRanking(session?._id).then(({ data }) => {
+                setRanking(data);
+            });
+        }
     }, []);
 
     return (
@@ -37,7 +39,12 @@ export default function SessionResults() {
                                                 key={index}
                                                 className="bg-base-200"
                                             >
-                                                <th>{index + 1}</th>
+                                                {index !==
+                                                ranking.length - 1 ? (
+                                                    <th>{index + 1}</th>
+                                                ) : (
+                                                    <th>-</th>
+                                                )}
                                                 <td>
                                                     {scoreItem.username}{" "}
                                                     <span className="text-semibold">

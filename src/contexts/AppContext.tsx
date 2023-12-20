@@ -126,11 +126,8 @@ export function AppProvider({ children }: ProviderProps) {
 
     const submitDistance = async () => {
         const getDistance = await calculateDistance();
-        if (getDistance) {
-            const result = await submitRoundScore(
-                rounds[rounds.length - 1]._id,
-                getDistance
-            );
+        if (getDistance && session) {
+            const result = await submitRoundScore(session._id, getDistance);
             setScore(result.data.score);
         }
     };

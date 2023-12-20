@@ -11,8 +11,8 @@ export type Round = {
     heading: number;
     pitch: number;
     score: number | null;
-    timestamp: number;
-    sessionId: string;
+    isScoreSubmitLate: boolean;
+    creationTimestamp: number;
 };
 
 export type Score = {

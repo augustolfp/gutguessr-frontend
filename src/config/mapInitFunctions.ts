@@ -1,4 +1,3 @@
-import { Loader } from "@googlemaps/js-api-loader";
 import { mapBaseConfig, streetViewBaseConfig } from "./googleMapsApiConfig";
 
 export const initMarker = async (markerLoader: google.maps.MarkerLibrary) => {
@@ -45,24 +44,6 @@ export const computeDistance = async (
 
     return null;
 };
-
-// export const renderResult = async (
-//     lat: number,
-//     lng: number,
-//     map: google.maps.Map,
-//     userMarker: google.maps.marker.AdvancedMarkerElement,
-//     loader: Loader
-// ) => {
-//     if (userMarker.position) {
-//         const exactMarker = await initMarker(map, loader);
-//         exactMarker.position = { lat, lng };
-
-//         traceDistanceLine(userMarker, exactMarker, map);
-//         const distance = await computeDistance(loader, userMarker, exactMarker);
-//         return { distance: distance };
-//     }
-//     return { distance: null };
-// };
 
 export const initMap = async (
     mapLoader: google.maps.MapsLibrary,

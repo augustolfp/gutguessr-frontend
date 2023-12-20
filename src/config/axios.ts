@@ -38,5 +38,5 @@ export const getSessionScore = async (sessionId: string) => {
 };
 
 export const getRanking = async () => {
-    return await axiosClient.get("/single-player-session/ranking");
+    return await axiosClient.get("/ranking");
 };

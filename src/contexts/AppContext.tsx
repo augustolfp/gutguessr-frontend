@@ -3,7 +3,7 @@ import {
     submitRoundScore,
     requestNextRound,
 } from "../config/axios";
-import { Loader } from "@googlemaps/js-api-loader";
+import useLoaders from "../hooks/useLoaders";
 import { createContext, useState, useContext, useEffect } from "react";
 import {
     initMap,
@@ -37,16 +37,13 @@ export function useAppContext() {
 }
 
 export function AppProvider({ children }: ProviderProps) {
-    const [loader, setLoader] = useState<Loader | null>(null);
-    const [markerLoader, setMarkerLoader] =
-        useState<google.maps.MarkerLibrary | null>(null);
-    const [mapLoader, setMapLoader] = useState<google.maps.MapsLibrary | null>(
-        null
-    );
-    const [streetViewLoader, setStreetViewLoader] =
-        useState<google.maps.StreetViewLibrary | null>(null);
-    const [geometryLoader, setGeometryLoader] =
-        useState<google.maps.GeometryLibrary | null>(null);
+    const {
+        loader,
+        markerLoader,
+        mapLoader,
+        streetViewLoader,
+        geometryLoader,
+    } = useLoaders();
 
     const [session, setSession] = useState<Session | null>(null);
     const [rounds, setRounds] = useState<Round[]>([]);
@@ -61,30 +58,6 @@ export function AppProvider({ children }: ProviderProps) {
         setSession(session);
         return session;
     };
-
-    useEffect(() => {
-        const initLoader = new Loader({
-            apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
-        });
-
-        initLoader.importLibrary("marker").then((initMarkerLoader) => {
-            setMarkerLoader(initMarkerLoader);
-        });
-
-        initLoader.importLibrary("maps").then((initMapLoader) => {
-            setMapLoader(initMapLoader);
-        });
-
-        initLoader.importLibrary("streetView").then((initStreetViewLoader) => {
-            setStreetViewLoader(initStreetViewLoader);
-        });
-
-        initLoader.importLibrary("geometry").then((initGeometryLoader) => {
-            setGeometryLoader(initGeometryLoader);
-        });
-
-        setLoader(initLoader);
-    }, []);
 
     const renderRound = async (round: Round) => {
         if (loader && markerLoader && mapLoader && streetViewLoader) {

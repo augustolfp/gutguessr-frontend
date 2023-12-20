@@ -10,9 +10,9 @@ interface DataContext {
     score: number | null;
     distance: number | null;
     isLate: boolean;
+    startNewRound: () => Promise<void>;
     submitScore: () => Promise<string | undefined>;
     status: "IDLE" | "LOADING" | "ERROR" | "SUCCESS";
-    clearData: () => void;
 }
 
 const DataContext = createContext({} as DataContext);
@@ -28,7 +28,13 @@ export function DataProvider({ children }: ProviderProps) {
     const [status, setStatus] = useState<
         "IDLE" | "LOADING" | "ERROR" | "SUCCESS"
     >("IDLE");
-    const { calculateDistance, session, displayResult } = useMapContext();
+    const {
+        calculateDistance,
+        session,
+        displayResult,
+        updateRoundsList,
+        renderRound,
+    } = useMapContext();
 
     const submitScore = async () => {
         try {
@@ -53,6 +59,16 @@ export function DataProvider({ children }: ProviderProps) {
         }
     };
 
+    const startNewRound = async () => {
+        try {
+            const newRound = await updateRoundsList();
+            await renderRound(newRound);
+            clearData();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const clearData = () => {
         setScore(null);
         setDistance(null);
@@ -62,7 +78,14 @@ export function DataProvider({ children }: ProviderProps) {
 
     return (
         <DataContext.Provider
-            value={{ score, distance, isLate, submitScore, clearData, status }}
+            value={{
+                score,
+                distance,
+                isLate,
+                submitScore,
+                status,
+                startNewRound,
+            }}
         >
             {children}
         </DataContext.Provider>

@@ -1,6 +1,8 @@
 import { useMapContext } from "../../contexts/MapContext";
 import { useDataContext } from "../../contexts/DataContext";
 import { Link } from "react-router-dom";
+import { FaMapSigns } from "react-icons/fa";
+import { IoStatsChartSharp } from "react-icons/io5";
 
 export default function InfoFooter() {
     const { session, rounds } = useMapContext();
@@ -8,9 +10,9 @@ export default function InfoFooter() {
     const isLast: boolean = rounds.length === session?.numOfRounds;
 
     return (
-        <div className="px-6 flex items-center justify-center gap-2 h-1/6">
+        <div className="flex items-center justify-center gap-2 h-1/6">
             {distance !== null && score !== null && (
-                <div className="flex items-center">
+                <div className="flex items-center gap-3">
                     <div className="stats shadow">
                         {roundState === "LATE" && (
                             <div>Late... zero points!</div>
@@ -19,11 +21,13 @@ export default function InfoFooter() {
                             <div>Gulag here we go!</div>
                         )}
                         {roundState === "ON_TIME" && (
-                            <div className="stat">
-                                <div className="stat-title">
+                            <div className="stat px-0">
+                                <div className="stat-title text-xs md:text-base">
                                     {distance} km from exact location
                                 </div>
-                                <div className="stat-value">{score} POINTS</div>
+                                <div className="stat-value text-primary text-2xl md:text-4xl">
+                                    {score} POINTS
+                                </div>
                                 <div className="stat-desc">
                                     Of 5000 points max
                                 </div>
@@ -32,8 +36,9 @@ export default function InfoFooter() {
                     </div>
 
                     {isLast ? (
-                        <Link to="/results" className="btn btn-secondary">
-                            See results!
+                        <Link to="/results" className="btn btn-primary">
+                            <IoStatsChartSharp />
+                            <span>See results!</span>
                         </Link>
                     ) : (
                         <button
@@ -42,7 +47,8 @@ export default function InfoFooter() {
                                 startNewRound();
                             }}
                         >
-                            Next round!
+                            <FaMapSigns />
+                            <span>Next round!</span>
                         </button>
                     )}
                 </div>

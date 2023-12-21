@@ -19,16 +19,16 @@ export default function SessionResults() {
     return (
         <div className="container mx-auto h-screen mt-12 p-6 flex flex-col justify-center items-center">
             {ranking && (
-                <div>
+                <div className="">
                     <div className="overflow-x-auto">
                         <h2 className="font-semibold text-3xl mb-6">Ranking</h2>
-                        <table className="table">
+                        <table className="table table-sm md:table-md">
                             <thead>
                                 <tr>
                                     <th></th>
                                     <th>Username</th>
                                     <th>Rounds played</th>
-                                    <th>Average Score</th>
+                                    <th>Score</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -13,6 +13,8 @@ interface DataContext {
     submitScore: () => Promise<string | undefined>;
     status: "IDLE" | "LOADING" | "ERROR" | "SUCCESS";
     roundState: "ON_TIME" | "LATE" | "NO_ANSWER";
+    isTrayOpen: boolean;
+    toggleTray: () => void;
     sendToSiberia: () => Promise<void>;
 }
 
@@ -23,6 +25,7 @@ export function useDataContext() {
 }
 
 export function DataProvider({ children }: ProviderProps) {
+    const [isTrayOpen, setIsTrayOpen] = useState(false);
     const [score, setScore] = useState<number | null>(null);
     const [distance, setDistance] = useState<number | null>(null);
     const [roundState, setRoundState] = useState<
@@ -38,7 +41,12 @@ export function DataProvider({ children }: ProviderProps) {
         updateRoundsList,
         renderRound,
         setUserMarkerPosition,
+        adjustMapZoom,
     } = useMapContext();
+
+    const toggleTray = () => {
+        setIsTrayOpen((prev) => !prev);
+    };
 
     const submitScore = async (autoTriggered?: boolean) => {
         try {
@@ -68,6 +76,7 @@ export function DataProvider({ children }: ProviderProps) {
             }
             setStatus("SUCCESS");
             displayResult();
+            adjustMapZoom();
         } catch (err) {
             setStatus("ERROR");
             if (typeof err === "string") {
@@ -86,7 +95,8 @@ export function DataProvider({ children }: ProviderProps) {
         try {
             setStatus("LOADING");
             await setUserMarkerPosition(siberia.lat, siberia.lng);
-            submitScore(true);
+            await submitScore(true);
+            setIsTrayOpen(true);
         } catch (err) {
             console.log(err);
         }
@@ -97,6 +107,7 @@ export function DataProvider({ children }: ProviderProps) {
             const newRound = await updateRoundsList();
             await renderRound(newRound);
             clearData();
+            setIsTrayOpen(false);
         } catch (err) {
             console.log(err);
         }
@@ -119,6 +130,8 @@ export function DataProvider({ children }: ProviderProps) {
                 roundState,
                 startNewRound,
                 sendToSiberia,
+                isTrayOpen,
+                toggleTray,
             }}
         >
             {children}

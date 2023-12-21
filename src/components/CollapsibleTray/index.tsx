@@ -1,12 +1,10 @@
-import { useMapContext } from "../../contexts/MapContext";
 import { useDataContext } from "../../contexts/DataContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose, AiFillWarning } from "react-icons/ai";
 
 export default function CollapsibleTray() {
-    const { submitScore, status } = useDataContext();
-    const [isTrayOpen, setIsTrayOpen] = useState(false);
+    const { submitScore, status, toggleTray, isTrayOpen } = useDataContext();
     const [errorMessage, setErrorMessage] = useState("");
 
     const onSubmit = async (e: React.SyntheticEvent) => {
@@ -18,9 +16,22 @@ export default function CollapsibleTray() {
         }
     };
 
-    let trayStyle: string = isTrayOpen
-        ? "absolute bottom-0 right-0 z-10 w-full h-2/3 md:bottom-4 md:right-4 md:w-1/2 md:h-1/2 transition-all"
-        : "absolute bottom-0 right-0 z-10 w-14 h-14 md:bottom-4 md:right-4 transition-all";
+    let trayStyle: string = "";
+
+    if (status === "SUCCESS" && isTrayOpen) {
+        trayStyle =
+            "absolute bottom-0 right-0 z-10 w-full h-full transition-all";
+    }
+
+    if (status !== "SUCCESS" && isTrayOpen) {
+        trayStyle =
+            "absolute bottom-0 right-0 z-10 w-full h-2/3 md:bottom-4 md:right-4 md:w-1/2 md:h-1/2 transition-all";
+    }
+
+    if (!isTrayOpen) {
+        trayStyle =
+            "absolute bottom-0 right-0 z-10 w-14 h-14 md:bottom-4 md:right-4 transition-all";
+    }
 
     let mapContainerStyle: string = isTrayOpen
         ? "h-full w-full opacity-100"
@@ -56,7 +67,7 @@ export default function CollapsibleTray() {
                 )}
                 <button
                     className="btn btn-neutral btn-sm md:btn-md aspect-square rounded-full p-2 absolute top-1 right-1 z-20"
-                    onClick={() => setIsTrayOpen((prev) => !prev)}
+                    onClick={toggleTray}
                 >
                     {isTrayOpen ? <AiOutlineClose /> : <FaMapMarked />}
                 </button>

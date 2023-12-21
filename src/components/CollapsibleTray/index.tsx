@@ -16,9 +16,22 @@ export default function CollapsibleTray() {
         }
     };
 
-    let trayStyle: string = isTrayOpen
-        ? "absolute bottom-0 right-0 z-10 w-full h-2/3 md:bottom-4 md:right-4 md:w-1/2 md:h-1/2 transition-all"
-        : "absolute bottom-0 right-0 z-10 w-14 h-14 md:bottom-4 md:right-4 transition-all";
+    let trayStyle: string = "";
+
+    if (status === "SUCCESS" && isTrayOpen) {
+        trayStyle =
+            "absolute bottom-0 right-0 z-10 w-full h-full transition-all";
+    }
+
+    if (status !== "SUCCESS" && isTrayOpen) {
+        trayStyle =
+            "absolute bottom-0 right-0 z-10 w-full h-2/3 md:bottom-4 md:right-4 md:w-1/2 md:h-1/2 transition-all";
+    }
+
+    if (!isTrayOpen) {
+        trayStyle =
+            "absolute bottom-0 right-0 z-10 w-14 h-14 md:bottom-4 md:right-4 transition-all";
+    }
 
     let mapContainerStyle: string = isTrayOpen
         ? "h-full w-full opacity-100"

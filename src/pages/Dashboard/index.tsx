@@ -7,16 +7,21 @@ import CollapsibleTray from "../../components/CollapsibleTray";
 import CountDownTimer from "../../components/CountdownTimer";
 
 export default function Dashboard() {
-    const { startNewRound } = useDataContext();
+    const { startNewRound, status } = useDataContext();
     const { rounds } = useMapContext();
     useEffect(() => {
         startNewRound();
     }, []);
 
+    let panoramaStyle: string =
+        status === "SUCCESS"
+            ? "relative h-3/6 transition-all"
+            : "relative h-5/6 transition-all";
+
     return (
         <div className="w-screen h-screen">
             <RoundBadge />
-            <div className="relative h-5/6">
+            <div className={`${panoramaStyle}`}>
                 {rounds.length !== 0 &&
                     rounds[rounds.length - 1].creationTimestamp && (
                         <CountDownTimer

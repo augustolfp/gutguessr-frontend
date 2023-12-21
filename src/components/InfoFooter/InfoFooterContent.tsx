@@ -3,70 +3,49 @@ import { useDataContext } from "../../contexts/DataContext";
 import { Link } from "react-router-dom";
 import { FaMapSigns } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
-import { GiHammerSickle } from "react-icons/gi";
+import NoAnswerResponse from "./NoAnswerResponse";
+import OnTimeResponse from "./OnTimeResponse";
+import LateResponse from "./LateResponse";
 
 export default function InfoFooterContent() {
     const { session, rounds } = useMapContext();
-    const { score, distance, roundState, startNewRound, status } =
-        useDataContext();
+    const { score, distance, roundState, startNewRound } = useDataContext();
     const isLast: boolean = rounds.length === session?.numOfRounds;
 
     return (
         <>
             {distance !== null && score !== null && (
-                <div className="flex flex-col items-center gap-3">
-                    <div>You didn't even try! </div>
-                    <div className="flex flex-col items-center gap-3 md:flex-row">
-                        {roundState === "LATE" && (
-                            <div>Late... zero points!</div>
-                        )}
-                        {roundState === "NO_ANSWER" && (
-                            <div className="">
-                                <div className="stat">
-                                    <div className="stat-figure text-error">
-                                        <GiHammerSickle size={40} />
-                                    </div>
-                                    <div className="stat-title">
-                                        So I sent you to
-                                    </div>
-                                    <div className="stat-value text-error">
-                                        Siberia
-                                    </div>
-                                    <div className="stat-desc">
-                                        just beacuse I can.
-                                    </div>
-                                    <span className="font-semibold text-center">
-                                        (0 points)
-                                    </span>
-                                </div>
-                            </div>
-                        )}
-                        {roundState === "ON_TIME" && (
-                            <div className="stat px-0">
-                                <div className="stat-title">
-                                    {distance} km from exact location
-                                </div>
-                                <div className="stat-value text-primary">
-                                    {score} POINTS
-                                </div>
-                                <div className="stat-desc">
-                                    Of 5000 points max
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                <div className="flex flex-col gap-4 p-8 max-w-md">
+                    {roundState === "LATE" && (
+                        <div className="text-2xl font-bold text-error">
+                            Cmonnnn you are late
+                        </div>
+                    )}
+                    {roundState === "NO_ANSWER" && (
+                        <div className="text-2xl font-bold text-error">
+                            You didn't even try!
+                        </div>
+                    )}
+                    {roundState === "ON_TIME" && (
+                        <div className="text-2xl font-bold text-success">
+                            Nice! Congratulations!
+                        </div>
+                    )}
+
+                    {roundState === "LATE" && <LateResponse />}
+                    {roundState === "NO_ANSWER" && <NoAnswerResponse />}
+                    {roundState === "ON_TIME" && (
+                        <OnTimeResponse distance={distance} score={score} />
+                    )}
 
                     {isLast ? (
-                        <Link
-                            to="/results"
-                            className="btn btn-primary w-full md:w-40"
-                        >
+                        <Link to="/results" className="btn btn-primary w-full">
                             <IoStatsChartSharp />
                             <span>See results!</span>
                         </Link>
                     ) : (
                         <button
-                            className="btn btn-secondary w-full md:w-40"
+                            className="btn btn-secondary w-full"
                             onClick={() => {
                                 startNewRound();
                             }}

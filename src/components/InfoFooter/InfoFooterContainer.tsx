@@ -9,8 +9,8 @@ export default function InfoFooterContainer({ children }: Props) {
 
     let infoFooterStyle: string =
         status === "SUCCESS"
-            ? "flex items-center justify-center gap-2 h-3/6 transition-all"
-            : "flex items-center justify-center gap-2 h-1/6 transition-all";
+            ? "flex justify-center items-center h-3/6 transition-all"
+            : "flex justify-center items-center h-1/6 transition-all";
 
     return <div className={`${infoFooterStyle}`}>{children}</div>;
 }

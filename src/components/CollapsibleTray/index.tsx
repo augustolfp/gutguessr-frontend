@@ -1,12 +1,10 @@
-import { useMapContext } from "../../contexts/MapContext";
 import { useDataContext } from "../../contexts/DataContext";
 import { useState } from "react";
 import { FaMapMarked } from "react-icons/fa";
 import { AiOutlineClose, AiFillWarning } from "react-icons/ai";
 
 export default function CollapsibleTray() {
-    const { submitScore, status } = useDataContext();
-    const [isTrayOpen, setIsTrayOpen] = useState(false);
+    const { submitScore, status, toggleTray, isTrayOpen } = useDataContext();
     const [errorMessage, setErrorMessage] = useState("");
 
     const onSubmit = async (e: React.SyntheticEvent) => {
@@ -56,7 +54,7 @@ export default function CollapsibleTray() {
                 )}
                 <button
                     className="btn btn-neutral btn-sm md:btn-md aspect-square rounded-full p-2 absolute top-1 right-1 z-20"
-                    onClick={() => setIsTrayOpen((prev) => !prev)}
+                    onClick={toggleTray}
                 >
                     {isTrayOpen ? <AiOutlineClose /> : <FaMapMarked />}
                 </button>

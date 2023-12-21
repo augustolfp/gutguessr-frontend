@@ -17,6 +17,22 @@ export const setMarkerPosition = async (
     return (marker.position = { lat: lat, lng: lng });
 };
 
+export const fitMarkersOnMap = async (
+    marker1: google.maps.marker.AdvancedMarkerElement,
+    marker2: google.maps.marker.AdvancedMarkerElement,
+    map: google.maps.Map
+) => {
+    if (!marker1.position || !marker2.position) {
+        throw "Marker positions are not defined";
+    }
+
+    const bounds = new google.maps.LatLngBounds();
+    const positions = [marker1.position, marker2.position];
+    bounds.extend(positions[0]);
+    bounds.extend(positions[1]);
+    map.fitBounds(bounds);
+};
+
 export const traceDistanceLine = (
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement,

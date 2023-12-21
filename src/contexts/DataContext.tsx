@@ -41,6 +41,7 @@ export function DataProvider({ children }: ProviderProps) {
         updateRoundsList,
         renderRound,
         setUserMarkerPosition,
+        adjustMapZoom,
     } = useMapContext();
 
     const toggleTray = () => {
@@ -75,6 +76,7 @@ export function DataProvider({ children }: ProviderProps) {
             }
             setStatus("SUCCESS");
             displayResult();
+            adjustMapZoom();
         } catch (err) {
             setStatus("ERROR");
             if (typeof err === "string") {

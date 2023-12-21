@@ -71,11 +71,7 @@ export default function CreateSinglePlayerSession() {
                                 className="input input-bordered"
                                 value={numOfRounds || ""}
                                 onChange={(e) => {
-                                    if (e.target.value) {
-                                        setNumOfRounds(
-                                            parseInt(e.target.value)
-                                        );
-                                    }
+                                    setNumOfRounds(parseInt(e.target.value));
                                 }}
                                 disabled={isLoading}
                             />
@@ -95,11 +91,14 @@ export default function CreateSinglePlayerSession() {
                     </p>
                 )}
                 {session && (
-                    <div>
-                        <h3 className="text-success">
+                    <div className="w-full">
+                        <h3 className="text-success mb-6">
                             Your game is ready, {session.username}!
                         </h3>
-                        <Link to="/single-player" className="btn btn-primary">
+                        <Link
+                            to="/single-player"
+                            className="btn btn-primary w-full"
+                        >
                             Go to first round!
                         </Link>
                     </div>

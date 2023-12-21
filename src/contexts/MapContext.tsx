@@ -85,6 +85,7 @@ export function MapProvider({ children }: ProviderProps) {
         if (map && userMarker && exactMarker && geometryLoader) {
             exactMarker.map = map;
             traceDistanceLine(userMarker, exactMarker, map);
+            google.maps.event.clearListeners(map, "click");
         }
     };
 

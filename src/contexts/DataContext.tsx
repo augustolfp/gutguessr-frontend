@@ -9,10 +9,11 @@ interface ProviderProps {
 interface DataContext {
     score: number | null;
     distance: number | null;
-    isLate: boolean;
     startNewRound: () => Promise<void>;
     submitScore: () => Promise<string | undefined>;
     status: "IDLE" | "LOADING" | "ERROR" | "SUCCESS";
+    roundState: "ON_TIME" | "LATE" | "NO_ANSWER";
+    sendToSiberia: () => Promise<void>;
 }
 
 const DataContext = createContext({} as DataContext);
@@ -24,7 +25,9 @@ export function useDataContext() {
 export function DataProvider({ children }: ProviderProps) {
     const [score, setScore] = useState<number | null>(null);
     const [distance, setDistance] = useState<number | null>(null);
-    const [isLate, setIsLate] = useState(false);
+    const [roundState, setRoundState] = useState<
+        "ON_TIME" | "LATE" | "NO_ANSWER"
+    >("ON_TIME");
     const [status, setStatus] = useState<
         "IDLE" | "LOADING" | "ERROR" | "SUCCESS"
     >("IDLE");
@@ -34,9 +37,10 @@ export function DataProvider({ children }: ProviderProps) {
         displayResult,
         updateRoundsList,
         renderRound,
+        setUserMarkerPosition,
     } = useMapContext();
 
-    const submitScore = async () => {
+    const submitScore = async (autoTriggered?: boolean) => {
         try {
             setStatus("LOADING");
             const distance = await calculateDistance();
@@ -47,7 +51,21 @@ export function DataProvider({ children }: ProviderProps) {
             }
             const { data } = await submitRoundScore(session?._id, distance);
             setScore(data.rounds[data.rounds.length - 1].score);
-            setIsLate(data.rounds[data.rounds.length - 1].isScoreSubmitLate);
+            if (autoTriggered) {
+                setRoundState("NO_ANSWER");
+            }
+            if (
+                !autoTriggered &&
+                data.rounds[data.rounds.length - 1].isScoreSubmitLate
+            ) {
+                setRoundState("LATE");
+            }
+            if (
+                !autoTriggered &&
+                !data.rounds[data.rounds.length - 1].isScoreSubmitLate
+            ) {
+                setRoundState("ON_TIME");
+            }
             setStatus("SUCCESS");
             displayResult();
         } catch (err) {
@@ -56,6 +74,21 @@ export function DataProvider({ children }: ProviderProps) {
                 return err;
             }
             return "A unknown error happened";
+        }
+    };
+
+    const sendToSiberia = async () => {
+        const siberia = {
+            lat: 73.581466,
+            lng: 142.151322,
+        };
+
+        try {
+            setStatus("LOADING");
+            await setUserMarkerPosition(siberia.lat, siberia.lng);
+            submitScore(true);
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -72,7 +105,7 @@ export function DataProvider({ children }: ProviderProps) {
     const clearData = () => {
         setScore(null);
         setDistance(null);
-        setIsLate(false);
+        setRoundState("ON_TIME");
         setStatus("IDLE");
     };
 
@@ -81,10 +114,11 @@ export function DataProvider({ children }: ProviderProps) {
             value={{
                 score,
                 distance,
-                isLate,
                 submitScore,
                 status,
+                roundState,
                 startNewRound,
+                sendToSiberia,
             }}
         >
             {children}

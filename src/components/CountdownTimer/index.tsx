@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useDataContext } from "../../contexts/DataContext";
 
 interface Props {
     timestamp: number;
@@ -9,6 +10,7 @@ export default function CountDownTimer({ timestamp }: Props) {
         (timestamp + 90 * 1000 - Date.now()) / 1000
     );
     const [countDown, setCountDown] = useState(startCountDown);
+    const { sendToSiberia } = useDataContext();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -26,7 +28,7 @@ export default function CountDownTimer({ timestamp }: Props) {
 
     useEffect(() => {
         if (countDown === 0) {
-            console.log("Send to South Pole!");
+            sendToSiberia();
         }
     }, [countDown]);
 

@@ -5,6 +5,7 @@ import {
     renderMaps,
     computeDistance,
     traceDistanceLine,
+    setMarkerPosition,
 } from "../config/mapInitFunctions";
 import { type Session, type Round } from "../types";
 
@@ -20,6 +21,7 @@ interface MapContext {
     calculateDistance: () => Promise<number>;
     updateRoundsList: () => Promise<Round>;
     renderRound: (round: Round) => Promise<void>;
+    setUserMarkerPosition: (lat: number, lng: number) => Promise<void>;
 }
 
 const MapContext = createContext({} as MapContext);
@@ -106,6 +108,19 @@ export function MapProvider({ children }: ProviderProps) {
         return distance;
     };
 
+    const setUserMarkerPosition = async (lat: number, lng: number) => {
+        if (!map) {
+            throw "Map is not defined.";
+        }
+
+        if (!userMarker) {
+            throw "User Marker is not defined.";
+        }
+
+        await setMarkerPosition(userMarker, lat, lng);
+        userMarker.map = map;
+    };
+
     return (
         <MapContext.Provider
             value={{
@@ -116,6 +131,7 @@ export function MapProvider({ children }: ProviderProps) {
                 calculateDistance,
                 updateRoundsList,
                 renderRound,
+                setUserMarkerPosition,
             }}
         >
             {children}

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function InfoFooter() {
     const { session, rounds } = useMapContext();
-    const { score, distance, isLate, startNewRound } = useDataContext();
+    const { score, distance, roundState, startNewRound } = useDataContext();
     const isLast: boolean = rounds.length === session?.numOfRounds;
 
     return (
@@ -12,9 +12,13 @@ export default function InfoFooter() {
             {distance !== null && score !== null && (
                 <div className="flex items-center">
                     <div className="stats shadow">
-                        {isLate ? (
+                        {roundState === "LATE" && (
                             <div>Late... zero points!</div>
-                        ) : (
+                        )}
+                        {roundState === "NO_ANSWER" && (
+                            <div>Gulag here we go!</div>
+                        )}
+                        {roundState === "ON_TIME" && (
                             <div className="stat">
                                 <div className="stat-title">
                                     {distance} km from exact location

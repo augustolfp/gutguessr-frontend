@@ -9,6 +9,14 @@ const initMarker = async (markerLoader: google.maps.MarkerLibrary) => {
     return marker;
 };
 
+export const setMarkerPosition = async (
+    marker: google.maps.marker.AdvancedMarkerElement,
+    lat: number,
+    lng: number
+) => {
+    return (marker.position = { lat: lat, lng: lng });
+};
+
 export const traceDistanceLine = (
     marker1: google.maps.marker.AdvancedMarkerElement,
     marker2: google.maps.marker.AdvancedMarkerElement,

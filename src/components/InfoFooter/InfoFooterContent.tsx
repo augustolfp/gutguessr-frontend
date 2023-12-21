@@ -18,7 +18,7 @@ export default function InfoFooterContent() {
                 <div className="flex flex-col gap-4 p-8 max-w-md">
                     {roundState === "LATE" && (
                         <div className="text-2xl font-bold text-error">
-                            Cmonnnn you are late
+                            You missed the timer!
                         </div>
                     )}
                     {roundState === "NO_ANSWER" && (

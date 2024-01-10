@@ -1,27 +1,34 @@
-# React + TypeScript + Vite
+**:warning: Work in Progress!**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<br />
 
-Currently, two official plugins are available:
+<h1 align='center'>GUTGUESSR: Frontend</h1>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<div align="center">
+   <a href="https://gutguessr-frontend.vercel.app"><strong>Deploy</strong></a>
+</div>
 
-## Expanding the ESLint configuration
+<br />
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# Descrição
 
-- Configure the top-level `parserOptions` property like this:
+O Gutguessr é um jogo que testa os conhecimentos de geografia dos seus usuários, que devem acertar sua localização a partir da paisagem apresentada.
+O conceito não é novo! O jogo mais famoso nesse formato é o Geoguessr, que é uma plataforma paga (e bastante cara), porém muito completa e bastante consolidada.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+<br />
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+# Motivação
+
+1. Jogar com os meus amigos
+    - Sempre gostei de jogar Geoguessr. Mas tenho consciência de que é um jogo caro, e que não é todo mundo que está disposto a pagar. A API do Google Maps não é barata.
+    - Portanto, resolvi criar uma versão grátis e bastante "streamlined": não requer login nem pagamento, basta entrar, jogar, e tentar entrar no ranking! Nos rende boas risadas;
+2. Testar novos conceitos de desenvolvimento
+    - O desenvolvimento do Frontend está sendo desafiador, me forçando a lidar com "pitfalls" e "edge cases" na biblioteca React;
+    - O próximo passo, que é a implementação de partidas online, irá elevar meu nível de compreensão dos WebSockets;
+
+<br />
+
+# Próximos passos
+
+1. Implementação de uma versão Multiplayer, com salas privadas;
+2. Criação de partidas temáticas (mundo, Brasil, Ásia, etc);

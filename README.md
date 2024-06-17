@@ -30,7 +30,7 @@ O conceito não é novo! O jogo mais famoso nesse formato é o Geoguessr, que é
 
 # Como jogar
 
-Assista <a href="https://drive.google.com/file/d/1EEEwf44X2e0zwRVOkVotOxR5htGP1CHM/view?usp=sharing">esse pequeno vídeo</a> que demonstra uma partida típica do Gutguessr!
+Assista <a href="https://drive.google.com/file/d/1GThwtXUbPAZrxu0AGBIXnN4iN7CwTkdV/view?usp=sharing">esse pequeno vídeo</a> que demonstra uma partida típica do Gutguessr!
 
 <br />
 

@@ -5,29 +5,32 @@ import { Link } from "react-router-dom";
 
 export default function CreateSinglePlayerSession() {
   const [username, setUsername] = useState<string>("JorelDaSilva22");
-  const [numOfRounds, setNumOfRounds] = useState<number | null>(null);
+  const [numOfRounds, setNumOfRounds] = useState<string>("2");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { session, updateSession } = useMapContext();
 
+  const handleCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNumOfRounds(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (numOfRounds) {
-      setIsLoading(true);
-      setIsError(false);
 
-      try {
-        const result = await createSession(username, numOfRounds);
+    setIsLoading(true);
+    setIsError(false);
 
-        updateSession({
-          ...result.data,
-        });
-        return;
-      } catch (err) {
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
+    try {
+      const result = await createSession(username, parseInt(numOfRounds));
+
+      updateSession({
+        ...result.data,
+      });
+      return;
+    } catch (err) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,22 +58,40 @@ export default function CreateSinglePlayerSession() {
               disabled={isLoading}
             />
           </div>
-          <div>
-            <label htmlFor="numOfRounds" className="label">
-              Number of Rounds:
-            </label>
-            <input
-              id="numOfRounds"
-              name="numOfRounds"
-              placeholder="Number of rounds"
-              type="number"
-              className="input input-bordered"
-              value={numOfRounds || ""}
-              onChange={(e) => {
-                setNumOfRounds(parseInt(e.target.value));
-              }}
-              disabled={isLoading}
-            />
+          <div className="flex gap-1">
+            <div className="bg-purple-900 p-1">
+              <span>1 RODADA</span>
+              <input
+                type="checkbox"
+                className="checkbox checkbox-lg"
+                value="1"
+                checked={numOfRounds === "1"}
+                onChange={handleCheckBox}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="bg-purple-900 p-1">
+              <span>2 RODADAS</span>
+              <input
+                type="checkbox"
+                className="checkbox checkbox-lg"
+                value="2"
+                checked={numOfRounds === "2"}
+                onChange={handleCheckBox}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="bg-purple-900 p-1">
+              <span>3 RODADAS</span>
+              <input
+                type="checkbox"
+                className="checkbox checkbox-lg"
+                value="3"
+                checked={numOfRounds === "3"}
+                onChange={handleCheckBox}
+                disabled={isLoading}
+              />
+            </div>
           </div>
           <button
             type="submit"

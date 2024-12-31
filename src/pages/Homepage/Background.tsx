@@ -1,4 +1,4 @@
-import RioDeJaneiro from "./silhouettes/rio.svg";
+import RioDeJaneiro from "../../assets/rioDeJaneiro.svg";
 
 export default function Background() {
   return (

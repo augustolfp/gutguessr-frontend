@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createSession } from "../../config/axios";
 import { useMapContext } from "../../contexts/MapContext";
 import { Link } from "react-router-dom";
+import Avatar from "boring-avatars";
 
 export default function CreateSinglePlayerSession() {
   const [username, setUsername] = useState<string>("JorelDaSilva22");
@@ -41,22 +42,25 @@ export default function CreateSinglePlayerSession() {
     >
       {!session && (
         <div className="flex flex-col gap-3">
-          <div>
-            <label htmlFor="username" className="label">
-              INSIRA UM NICKNAME BACANA
-            </label>
-            <input
-              id="username"
-              name="username"
-              placeholder="Username"
-              type="string"
-              className="input input-bordered"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-              disabled={isLoading}
-            />
+          <div className="flex">
+            <Avatar name={username} variant="beam" />
+            <div>
+              <label htmlFor="username" className="label">
+                INSIRA UM NICKNAME BACANA
+              </label>
+              <input
+                id="username"
+                name="username"
+                placeholder="Username"
+                type="string"
+                className="input input-bordered"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                disabled={isLoading}
+              />
+            </div>
           </div>
           <div className="flex gap-1">
             <div className="bg-purple-900 p-1">

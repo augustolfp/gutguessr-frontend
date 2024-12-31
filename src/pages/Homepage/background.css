@@ -1,0 +1,23 @@
+#rio-de-janeiro {
+    object-fit: cover;
+    object-position: left bottom;
+    height: 350px;
+}
+
+@media only screen and (min-width: 1536px) {
+    #rio-de-janeiro {
+        height: 500px;
+    }
+}
+
+@media only screen and (min-width: 2100px) {
+    #rio-de-janeiro {
+        height: 650px;
+    }
+}
+
+@media only screen and (min-width: 3000px) {
+    #rio-de-janeiro {
+        height: 900px;
+    }
+}

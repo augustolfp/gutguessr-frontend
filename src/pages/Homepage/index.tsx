@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CreateSinglePlayerSession from "../../components/CreateSinglePlayerSession";
+import HowToPlay from "../../components/HowToPlay";
 
 export default function Homepage() {
   const [menu, setMenu] = useState("DEFAULT");
@@ -17,16 +18,37 @@ export default function Homepage() {
           desde Paris na França, até Barro Duro no Piauí.
         </p>
         {menu === "DEFAULT" && (
+          <>
+            <button
+              onClick={(_e) => {
+                setMenu("SINGLE_PLAYER_SESSION_FORM");
+              }}
+              className="btn btn-primary"
+            >
+              JOGAR AGORA!
+            </button>
+            <button
+              onClick={(_e) => {
+                setMenu("HOW_TO_PLAY");
+              }}
+              className="btn btn-secondary"
+            >
+              COMO JOGAR?
+            </button>
+          </>
+        )}
+        {menu !== "DEFAULT" && (
           <button
             onClick={(_e) => {
-              setMenu("SINGLE_PLAYER_SESSION_FORM");
+              setMenu("DEFAULT");
             }}
-            className="btn btn-primary"
+            className="btn btn-secondary"
           >
-            JOGAR AGORA!
+            Voltar
           </button>
         )}
         {menu === "SINGLE_PLAYER_SESSION_FORM" && <CreateSinglePlayerSession />}
+        {menu === "HOW_TO_PLAY" && <HowToPlay />}
       </div>
     </div>
   );

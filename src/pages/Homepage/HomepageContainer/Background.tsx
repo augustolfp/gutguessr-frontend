@@ -1,4 +1,4 @@
-import RioDeJaneiro from "../../assets/rioDeJaneiro.svg";
+import RioDeJaneiro from "../../../assets/rioDeJaneiro.svg";
 
 import "./background.css";
 

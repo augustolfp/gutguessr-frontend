@@ -8,7 +8,7 @@ export default function Homepage() {
 
   return (
     <HomepageContainer>
-      <div className="container mx-auto mt-12 p-6 flex flex-col justify-center items-center">
+      <div className="container mx-auto mt-12 p-6 flex flex-col justify-center items-center relative">
         <p className="py-8 font-semibold text-primary text-center">
           Só um aviso: a primeira rodada pode demorar alguns segundinhos para
           carregar! Abraços :)

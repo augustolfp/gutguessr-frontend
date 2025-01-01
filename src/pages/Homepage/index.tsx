@@ -1,12 +1,14 @@
 import { useState } from "react";
 import CreateSinglePlayerSession from "../../components/CreateSinglePlayerSession";
 import HowToPlay from "../../components/HowToPlay";
+import Background from "./Background";
 
 export default function Homepage() {
   const [menu, setMenu] = useState("DEFAULT");
 
   return (
-    <div className="container mx-auto h-screen mt-12 p-6 flex flex-col justify-center items-center">
+    <div className="container mx-auto h-[calc(100vh-64px)] mt-12 p-6 flex flex-col justify-center items-center">
+      <Background />
       <p className="py-8 font-semibold text-primary text-center">
         Só um aviso: a primeira rodada pode demorar alguns segundinhos para
         carregar! Abraços :)

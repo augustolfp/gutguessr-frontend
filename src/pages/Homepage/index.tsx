@@ -8,52 +8,51 @@ export default function Homepage() {
 
   return (
     <HomepageContainer>
-      <div className="container mx-auto p-6 flex flex-col justify-center items-center relative">
-        <p className="py-8 font-semibold text-primary text-center">
-          Só um aviso: a primeira rodada pode demorar alguns segundinhos para
-          carregar! Abraços :)
+      <div className="container mx-auto pt-16 flex flex-col justify-center items-center relative">
+        <h1 className="text-5xl font-extrabold">
+          <span className="text-primary">Gut</span>Guessr
+        </h1>
+        <p className="text-7xl font-black mt-12">Leve Suas Viagens</p>
+        <p className="text-7xl font-black tracking-wider">para um novo nível</p>
+        <p className="text-center text-2xl font-light text-base-content text-opacity-70 leading-8 mt-4">
+          No GutGuessr você será transportado para <br /> qualquer lugar do
+          mundo: <br /> desde Paris na França, até Barro Duro no Piauí.
         </p>
-        <div className="flex flex-col items-center">
-          <p>VOCÊ MANJA DE GEOGRAFIA?</p>
-          <p>
-            No GutGuessr você será transportado para qualquer lugar do mundo,
-            desde Paris na França, até Barro Duro no Piauí.
-          </p>
-          {menu === "DEFAULT" && (
-            <>
-              <button
-                onClick={(_e) => {
-                  setMenu("SINGLE_PLAYER_SESSION_FORM");
-                }}
-                className="btn btn-primary"
-              >
-                JOGAR AGORA!
-              </button>
-              <button
-                onClick={(_e) => {
-                  setMenu("HOW_TO_PLAY");
-                }}
-                className="btn btn-secondary"
-              >
-                COMO JOGAR?
-              </button>
-            </>
-          )}
-          {menu !== "DEFAULT" && (
+        <p className="text-2xl font-light text-base-content text-opacity-70 mt-4">
+          Tudo isso de graça e sem sair de casa!
+        </p>
+        {menu === "DEFAULT" && (
+          <>
             <button
               onClick={(_e) => {
-                setMenu("DEFAULT");
+                setMenu("SINGLE_PLAYER_SESSION_FORM");
               }}
-              className="btn btn-secondary"
+              className="btn btn-primary btn-lg mt-8"
             >
-              Voltar
+              Jogar Agora!
             </button>
-          )}
-          {menu === "SINGLE_PLAYER_SESSION_FORM" && (
-            <CreateSinglePlayerSession />
-          )}
-          {menu === "HOW_TO_PLAY" && <HowToPlay />}
-        </div>
+            <button
+              onClick={(_e) => {
+                setMenu("HOW_TO_PLAY");
+              }}
+              className="btn btn-neutral btn-lg mt-6"
+            >
+              Como Jogar?
+            </button>
+          </>
+        )}
+        {menu !== "DEFAULT" && (
+          <button
+            onClick={(_e) => {
+              setMenu("DEFAULT");
+            }}
+            className="btn btn-secondary"
+          >
+            Voltar
+          </button>
+        )}
+        {menu === "SINGLE_PLAYER_SESSION_FORM" && <CreateSinglePlayerSession />}
+        {menu === "HOW_TO_PLAY" && <HowToPlay />}
       </div>
     </HomepageContainer>
   );

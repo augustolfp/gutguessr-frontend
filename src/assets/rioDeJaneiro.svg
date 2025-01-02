@@ -9,7 +9,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs1">
-      <linearGradient id="grad1" x1="0%" y1="100%" x2="100%" y2="-150%">
+      <linearGradient id="grad1" x1="10%" y1="75%" x2="50%" y2="25%">
       <stop offset="0%" stop-color="#221551" />
       <stop offset="50%" stop-color="#3D6EA2" />
       <stop offset="75%" stop-color="#4B9ACB" />

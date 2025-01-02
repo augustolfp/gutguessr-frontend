@@ -9,11 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs1">
-      <radialGradient id="grad1" cx="75%" cy="-50%" r="120%">
-          <stop offset="0%" stop-color="#58C7F3" />
-          <stop offset="50%" stop-color="#4B9ACB" />
-          <stop offset="75%" stop-color="#3D6EA2" />
-          <stop offset="100%" stop-color="#221551" />
+        <radialGradient id="grad1" cx="85%" cy="-10%" r="100%">
+          <stop offset="95%" stop-color="#58C7F3" />
+          <stop offset="100%" stop-color="#3D6EA2" />
     </radialGradient>
   </defs>
 

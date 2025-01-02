@@ -13,7 +13,16 @@ export default function Homepage() {
           <span className="text-primary">Gut</span>Guessr
         </h1>
         <p className="text-7xl font-black mt-12">Leve Suas Viagens</p>
-        <p className="text-7xl font-black tracking-wider">para um novo nível</p>
+        <span>
+          <div className="relative text-7xl font-black tracking-wider">
+            <span className="bg-clip-text bg-gradient-to-r from-secondary via-primary to-accent blur-3xl opacity-50 absolute">
+              para um novo nível
+            </span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary via-primary to-accent">
+              para um novo nível
+            </span>
+          </div>
+        </span>
         <p className="text-center text-2xl font-light text-base-content text-opacity-70 leading-8 mt-4">
           No GutGuessr você será transportado para <br /> qualquer lugar do
           mundo: <br /> desde Paris na França, até Barro Duro no Piauí.

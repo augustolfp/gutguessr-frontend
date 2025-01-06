@@ -1,0 +1,5 @@
+#homepage-container {
+    /* background-image: radial-gradient(100vw circle at top right, #462BA2, #301E70, #251756, #1A103D); */
+    /* Não especificar o raio do círculo no radial gradient faz com que ele estenda o raio do círculo até o canto mais distante (que era o que eu queria nesse caso:) */
+    background: radial-gradient(circle at top right, #462BA2 10%, #301E70 40%, #251756 70%, #1A103D 100%);
+}

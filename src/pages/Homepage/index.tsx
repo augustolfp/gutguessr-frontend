@@ -1,17 +1,68 @@
+import { useState } from "react";
 import CreateSinglePlayerSession from "../../components/CreateSinglePlayerSession";
-import Background from "./Background";
+import HowToPlay from "../../components/HowToPlay";
+import HomepageContainer from "./HomepageContainer";
 
 export default function Homepage() {
+  const [menu, setMenu] = useState("DEFAULT");
+
   return (
-    <div className="container mx-auto h-[calc(100vh-64px)] mt-12 p-6 flex flex-col justify-center items-center">
-      <Background />
-      <p className="py-8 font-semibold text-primary text-center">
-        Só um aviso: a primeira rodada pode demorar alguns segundinhos para
-        carregar! Abraços :)
-      </p>
-      <div className="flex flex-wrap justify-center items-center gap-4">
-        <CreateSinglePlayerSession />
+    <HomepageContainer>
+      <div className="container mx-auto pt-16 flex flex-col justify-center items-center relative">
+        <h1 className="text-5xl font-extrabold">
+          <span className="text-primary">Gut</span>Guessr
+        </h1>
+        <p className="text-7xl font-black mt-12">Explore o Mundo</p>
+        <span>
+          <div className="relative text-7xl font-black tracking-wider">
+            <span className="bg-clip-text bg-gradient-to-r from-secondary via-primary to-accent blur-3xl opacity-50 absolute">
+              em um novo nível
+            </span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary via-primary to-accent">
+              em um novo nível
+            </span>
+          </div>
+        </span>
+        <p className="text-center text-2xl font-light text-base-content text-opacity-70 leading-8 mt-4">
+          No GutGuessr você será transportado para <br /> qualquer lugar do
+          planeta: <br /> desde Paris na França, até Barro Duro no Piauí.
+        </p>
+        <p className="text-2xl font-light text-base-content text-opacity-70 mt-4">
+          Tudo isso de graça e sem sair de casa!
+        </p>
+        {menu === "DEFAULT" && (
+          <>
+            <button
+              onClick={(_e) => {
+                setMenu("SINGLE_PLAYER_SESSION_FORM");
+              }}
+              className="btn btn-primary btn-lg mt-8"
+            >
+              Jogar Agora!
+            </button>
+            <button
+              onClick={(_e) => {
+                setMenu("HOW_TO_PLAY");
+              }}
+              className="btn btn-neutral btn-lg mt-6"
+            >
+              Como Jogar?
+            </button>
+          </>
+        )}
+        {menu !== "DEFAULT" && (
+          <button
+            onClick={(_e) => {
+              setMenu("DEFAULT");
+            }}
+            className="btn btn-secondary"
+          >
+            Voltar
+          </button>
+        )}
+        {menu === "SINGLE_PLAYER_SESSION_FORM" && <CreateSinglePlayerSession />}
+        {menu === "HOW_TO_PLAY" && <HowToPlay />}
       </div>
-    </div>
+    </HomepageContainer>
   );
 }

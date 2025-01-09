@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { createSession } from "../../config/axios";
-import { useMapContext } from "../../contexts/MapContext";
+import { createSession } from "../../../config/axios";
+import { useMapContext } from "../../../contexts/MapContext";
 import { Link } from "react-router-dom";
 import Avatar from "boring-avatars";
 
@@ -36,24 +36,21 @@ export default function CreateSinglePlayerSession() {
   };
 
   return (
-    <form
-      className="gap-2 card-body items-center text-center"
-      onSubmit={handleSubmit}
-    >
+    <form className="" onSubmit={handleSubmit}>
       {!session && (
-        <div className="flex flex-col gap-3">
-          <div className="flex">
-            <Avatar name={username} variant="beam" />
-            <div>
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center justify-between gap-6">
+            <Avatar name={username} variant="beam" size={76} />
+            <div className="w-full">
               <label htmlFor="username" className="label">
-                INSIRA UM NICKNAME BACANA
+                Insira um Nickname bacana:
               </label>
               <input
                 id="username"
                 name="username"
                 placeholder="Username"
                 type="string"
-                className="input input-bordered"
+                className="input input-bordered w-full lg:input-lg"
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
@@ -62,34 +59,34 @@ export default function CreateSinglePlayerSession() {
               />
             </div>
           </div>
-          <div className="flex gap-1">
-            <div className="bg-purple-900 p-1">
+          <div className="flex gap-1 justify-around">
+            <div className="flex flex-col items-center gap-1 md:flex-row">
               <span>1 RODADA</span>
               <input
                 type="checkbox"
-                className="checkbox checkbox-lg"
+                className="checkbox lg:checkbox-lg"
                 value="1"
                 checked={numOfRounds === "1"}
                 onChange={handleCheckBox}
                 disabled={isLoading}
               />
             </div>
-            <div className="bg-purple-900 p-1">
+            <div className="flex flex-col items-center gap-1 md:flex-row">
               <span>2 RODADAS</span>
               <input
                 type="checkbox"
-                className="checkbox checkbox-lg"
+                className="checkbox lg:checkbox-lg"
                 value="2"
                 checked={numOfRounds === "2"}
                 onChange={handleCheckBox}
                 disabled={isLoading}
               />
             </div>
-            <div className="bg-purple-900 p-1">
+            <div className="flex flex-col items-center gap-1 md:flex-row">
               <span>3 RODADAS</span>
               <input
                 type="checkbox"
-                className="checkbox checkbox-lg"
+                className="checkbox lg:checkbox-lg"
                 value="3"
                 checked={numOfRounds === "3"}
                 onChange={handleCheckBox}
@@ -107,17 +104,17 @@ export default function CreateSinglePlayerSession() {
         </div>
       )}
       {isError && (
-        <p className="text-error">
-          An error occurred while creating the section. Try again!
+        <p className="text-error text-center">
+          Ocorreu um erro ao carregar o jogo. Tente novamente!
         </p>
       )}
       {session && (
         <div className="w-full">
           <h3 className="text-success mb-6">
-            Your game is ready, {session.username}!
+            Seu jogo está pronto, {session.username}!
           </h3>
           <Link to="/single-player" className="btn btn-primary w-full">
-            Go to first round!
+            Ir para a primeira rodada!
           </Link>
         </div>
       )}

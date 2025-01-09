@@ -25,13 +25,14 @@ export default function Homepage() {
           Jogar Agora!
         </button>
         <dialog id="createSinglePlayerSessionModal" className="modal">
-          <div className="modal-box">
+          <div className="modal-box p-8">
             <form method="dialog">
-              <button className="btn">
+              <button className="btn btn-sm">
                 <IoMdArrowRoundBack />
                 Voltar
               </button>
             </form>
+            <h4 className="text-center text-2xl font-bold">Nova partida</h4>
             <CreateSinglePlayerSession />
           </div>
           <form method="dialog" className="modal-backdrop">

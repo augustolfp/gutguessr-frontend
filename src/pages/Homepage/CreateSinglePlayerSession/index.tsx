@@ -36,12 +36,9 @@ export default function CreateSinglePlayerSession() {
   };
 
   return (
-    <form
-      className="gap-2 card-body items-center text-center"
-      onSubmit={handleSubmit}
-    >
+    <form className="bg-pink-300" onSubmit={handleSubmit}>
       {!session && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col">
           <div className="flex">
             <Avatar name={username} variant="beam" />
             <div>
@@ -108,7 +105,7 @@ export default function CreateSinglePlayerSession() {
       )}
       {isError && (
         <p className="text-error">
-          An error occurred while creating the section. Try again!
+          Ocorreu um erro ao carregar o jogo. Tente novamente!
         </p>
       )}
       {session && (

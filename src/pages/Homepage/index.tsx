@@ -1,6 +1,6 @@
 import { useState } from "react";
-import CreateSinglePlayerSession from "../../components/CreateSinglePlayerSession";
-import HowToPlay from "./HowToPlay";
+import CreateSinglePlayerSession from "./CreateSinglePlayerSession";
+// import HowToPlay from "./HowToPlay";
 import HomepageContainer from "./HomepageContainer";
 import HomepageHero from "./HomepageHero";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { createSession } from "../../config/axios";
-import { useMapContext } from "../../contexts/MapContext";
+import { createSession } from "../../../config/axios";
+import { useMapContext } from "../../../contexts/MapContext";
 import { Link } from "react-router-dom";
 import Avatar from "boring-avatars";
 

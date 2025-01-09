@@ -36,21 +36,21 @@ export default function CreateSinglePlayerSession() {
   };
 
   return (
-    <form className="bg-pink-300" onSubmit={handleSubmit}>
+    <form className="" onSubmit={handleSubmit}>
       {!session && (
-        <div className="flex flex-col">
-          <div className="flex">
-            <Avatar name={username} variant="beam" />
-            <div>
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center justify-between gap-6">
+            <Avatar name={username} variant="beam" size={76} />
+            <div className="w-full">
               <label htmlFor="username" className="label">
-                INSIRA UM NICKNAME BACANA
+                Insira um Nickname bacana:
               </label>
               <input
                 id="username"
                 name="username"
                 placeholder="Username"
                 type="string"
-                className="input input-bordered"
+                className="input input-bordered w-full lg:input-lg"
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
@@ -59,34 +59,34 @@ export default function CreateSinglePlayerSession() {
               />
             </div>
           </div>
-          <div className="flex gap-1">
-            <div className="bg-purple-900 p-1">
+          <div className="flex gap-1 justify-around">
+            <div className="flex flex-col items-center gap-1 md:flex-row">
               <span>1 RODADA</span>
               <input
                 type="checkbox"
-                className="checkbox checkbox-lg"
+                className="checkbox lg:checkbox-lg"
                 value="1"
                 checked={numOfRounds === "1"}
                 onChange={handleCheckBox}
                 disabled={isLoading}
               />
             </div>
-            <div className="bg-purple-900 p-1">
+            <div className="flex flex-col items-center gap-1 md:flex-row">
               <span>2 RODADAS</span>
               <input
                 type="checkbox"
-                className="checkbox checkbox-lg"
+                className="checkbox lg:checkbox-lg"
                 value="2"
                 checked={numOfRounds === "2"}
                 onChange={handleCheckBox}
                 disabled={isLoading}
               />
             </div>
-            <div className="bg-purple-900 p-1">
+            <div className="flex flex-col items-center gap-1 md:flex-row">
               <span>3 RODADAS</span>
               <input
                 type="checkbox"
-                className="checkbox checkbox-lg"
+                className="checkbox lg:checkbox-lg"
                 value="3"
                 checked={numOfRounds === "3"}
                 onChange={handleCheckBox}

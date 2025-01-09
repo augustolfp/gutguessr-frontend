@@ -25,9 +25,9 @@ export default function Homepage() {
           Jogar Agora!
         </button>
         <dialog id="createSinglePlayerSessionModal" className="modal">
-          <div className="modal-box p-8">
+          <div className="modal-box lg:p-8">
             <form method="dialog">
-              <button className="btn btn-sm">
+              <button className="btn btn-sm btn-ghost">
                 <IoMdArrowRoundBack />
                 Voltar
               </button>

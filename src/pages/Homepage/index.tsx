@@ -1,6 +1,7 @@
 import CreateSinglePlayerSession from "./CreateSinglePlayerSession";
 import HomepageContainer from "./HomepageContainer";
 import HomepageHero from "./HomepageHero";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 export default function Homepage() {
   const handleOpenModal = (e: React.SyntheticEvent) => {
@@ -25,6 +26,12 @@ export default function Homepage() {
         </button>
         <dialog id="createSinglePlayerSessionModal" className="modal">
           <div className="modal-box">
+            <form method="dialog">
+              <button className="btn">
+                <IoMdArrowRoundBack />
+                Voltar
+              </button>
+            </form>
             <CreateSinglePlayerSession />
           </div>
           <form method="dialog" className="modal-backdrop">

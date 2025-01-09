@@ -42,14 +42,14 @@ export default function Homepage() {
             >
               Jogar Agora!
             </button>
-            <button
+            {/* <button
               onClick={(_e) => {
                 setMenu("HOW_TO_PLAY");
               }}
               className="btn btn-neutral mt-2 lg:btn-lg"
             >
               Como Jogar?
-            </button>
+            </button> */}
           </>
         )}
         {menu !== "DEFAULT" && (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CreateSinglePlayerSession from "../../components/CreateSinglePlayerSession";
-import HowToPlay from "../../components/HowToPlay";
+import HowToPlay from "./HowToPlay";
 import HomepageContainer from "./HomepageContainer";
 import HomepageHero from "./HomepageHero";
 
@@ -42,7 +42,7 @@ export default function Homepage() {
           </button>
         )}
         {menu === "SINGLE_PLAYER_SESSION_FORM" && <CreateSinglePlayerSession />}
-        {menu === "HOW_TO_PLAY" && <HowToPlay />}
+        {/* {menu === "HOW_TO_PLAY" && <HowToPlay />} */}
       </div>
     </HomepageContainer>
   );

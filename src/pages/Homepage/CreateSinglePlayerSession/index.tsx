@@ -104,17 +104,17 @@ export default function CreateSinglePlayerSession() {
         </div>
       )}
       {isError && (
-        <p className="text-error">
+        <p className="text-error text-center">
           Ocorreu um erro ao carregar o jogo. Tente novamente!
         </p>
       )}
       {session && (
         <div className="w-full">
           <h3 className="text-success mb-6">
-            Your game is ready, {session.username}!
+            Seu jogo está pronto, {session.username}!
           </h3>
           <Link to="/single-player" className="btn btn-primary w-full">
-            Go to first round!
+            Ir para a primeira rodada!
           </Link>
         </div>
       )}

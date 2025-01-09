@@ -3,6 +3,7 @@ import { createSession } from "../../../config/axios";
 import { useMapContext } from "../../../contexts/MapContext";
 import { Link } from "react-router-dom";
 import Avatar from "boring-avatars";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function CreateSinglePlayerSession() {
   const [username, setUsername] = useState<string>("JorelDaSilva22");
@@ -99,8 +100,13 @@ export default function CreateSinglePlayerSession() {
             disabled={isLoading}
             className="btn btn-primary w-full"
           >
-            {isLoading ? "Loading..." : "COMEÇAR O JOGO!"}
+            {isLoading ? <ClipLoader color="white" /> : "COMEÇAR O JOGO!"}
           </button>
+          {isLoading && (
+            <p className="text-info text-xs lg:text-sm text-center">
+              PS: às vezes o primeiro carregamento pode demorar uns segundinhos!
+            </p>
+          )}
         </div>
       )}
       {isError && (

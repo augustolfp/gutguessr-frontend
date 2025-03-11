@@ -15,4 +15,7 @@ export const streetViewBaseConfig: google.maps.StreetViewPanoramaOptions = {
     motionTracking: false,
     motionTrackingControl: false,
     showRoadLabels: false,
+    zoomControlOptions: {
+        position: 6
+    } 
 };
